@@ -129,7 +129,7 @@ namespace TgBotPillar.Api.Services
             {
                 await bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
 
-                const string filePath = @"Files/tux.png";
+                const string filePath = @"img/69-specs.png";
                 using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                 var fileName = filePath.Split(Path.DirectorySeparatorChar).Last();
                 return await bot.SendPhotoAsync(chatId: message.Chat.Id,

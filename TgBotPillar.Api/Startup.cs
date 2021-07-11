@@ -59,8 +59,6 @@ namespace TgBotPillar.Api
                     "TgBotPillar.Api v1"));
             }
 
-            // app.UseHttpsRedirection();
-
             app.UseRouting();
             app.UseCors();
 

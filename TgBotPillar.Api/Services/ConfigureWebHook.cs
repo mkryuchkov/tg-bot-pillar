@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
+using Telegram.Bot.Types.InputFiles;
 using TgBotPillar.Api.Model;
 
 namespace TgBotPillar.Api.Services
@@ -38,7 +40,28 @@ namespace TgBotPillar.Api.Services
             // Since nobody else knows your bot's token, you can be pretty sure it's us.
             var webhookAddress = @$"{_config.Host}/bot/{_config.Token}";
             _logger.LogInformation("Setting webhook: ", webhookAddress);
-            await botClient.SetWebhookAsync(webhookAddress, cancellationToken: cancellationToken);
+
+            InputFileStream certInput = null;
+            try
+            {
+                var cert = File.OpenRead(_config.CertPath);
+                certInput = new InputFileStream(cert);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("Certificate is missing: ", ex.Message);
+            }
+            finally
+            {
+                await botClient.SetWebhookAsync(
+                    webhookAddress,
+                    certInput,
+                    cancellationToken: cancellationToken);
+                
+                if (certInput?.Content != null) {
+                    await certInput.Content.DisposeAsync();
+                }
+            }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
