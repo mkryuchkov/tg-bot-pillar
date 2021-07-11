@@ -1,6 +1,6 @@
 using System;
 
-namespace Kryuchkov.TgBotPillar
+namespace TgBotPillar.Api
 {
     public class WeatherForecast
     {

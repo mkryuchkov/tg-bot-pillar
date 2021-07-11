@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
-namespace Kryuchkov.TgBotPillar
+namespace TgBotPillar.Api
 {
     public class Startup
     {
@@ -23,7 +23,7 @@ namespace Kryuchkov.TgBotPillar
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TgBotPillar", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TgBotPillar.Api", Version = "v1" });
             });
         }
 
@@ -34,7 +34,7 @@ namespace Kryuchkov.TgBotPillar
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TgBotPillar v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TgBotPillar.Api v1"));
             }
 
             app.UseHttpsRedirection();

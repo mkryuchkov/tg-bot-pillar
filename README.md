@@ -1,2 +1,3 @@
-# tg-bot-pillar
+# Telegram Bot Pillar
+
 Telegram Bot FSM based template

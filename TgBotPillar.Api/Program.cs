@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Kryuchkov.TgBotPillar
+namespace TgBotPillar.Api
 {
     public class Program
     {
