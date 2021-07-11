@@ -1,6 +1,6 @@
 using System;
 
-namespace TgBotPillar.Api
+namespace TgBotPillar.Api.Model
 {
     public class WeatherForecast
     {
