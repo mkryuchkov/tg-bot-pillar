@@ -1,0 +1,39 @@
+Default.yml:
+
+  start:
+    transition: waitlist
+
+Example.yml:
+
+  hello:
+    text: Hello, my friend! It's example. 
+    buttons: 
+      - some_button:
+          label: Question!
+          transition: question
+      - info:
+      - menu:
+          transition: menu
+
+  question:
+    text: What is your profession? 
+    transition: 
+      input: question_answer_handler
+      state: hello
+
+  info:
+    text: Some description 
+    transition: menu
+
+  menu:
+    text: Menu 
+    buttons: 
+      - info:
+      - question:
+
+Waitlist.yml:
+
+  waitlist:
+    text: Please, wait. 
+    transition: waitlist
+

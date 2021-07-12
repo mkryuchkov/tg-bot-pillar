@@ -1,0 +1,66 @@
+<#@ template hostspecific="true" language="C#" #>
+<#@ output extension=".Generated.yml" #>
+<#@ assembly name="YamlDotNet" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="YamlDotNet.Serialization" #>
+<#@ import namespace="YamlDotNet.Serialization.NamingConventions" #>
+<#
+    var deserializer = new DeserializerBuilder()
+        .WithNamingConvention(UnderscoredNamingConvention.Instance) 
+        .Build();
+
+    var dirInfo = new DirectoryInfo(this.Host.ResolvePath("States"));
+
+    foreach(var fileInfo in dirInfo.GetFiles("*.yml")) {
+        WriteLine($"{fileInfo.Name}:"); // Filename
+        var states = deserializer.Deserialize<
+            Dictionary<string, Dictionary<string, object>>>(
+                File.ReadAllText(fileInfo.FullName));
+        foreach(var state in states) {
+            WriteLine($"\n  {state.Key}:"); // state name
+            foreach (var prop in state.Value)
+            {
+                Write($"    {prop.Key}: "); // State property (1 of 3)
+                switch (prop.Key)
+                {
+                    case "text":
+                        WriteLine(prop.Value.ToString().Replace('\n', ' ')); // state.text value
+                        break;
+                    case "buttons":
+                        if (prop.Value != null) {
+                            WriteLine("");
+                            foreach (var button in (List<object>)prop.Value) {
+                                foreach (var buttonVal in (Dictionary<object, object>)button) {
+                                    WriteLine($"      - {buttonVal.Key}:"); // state.button name
+                                    if (buttonVal.Value != null) {
+                                        foreach (var buttonProp in (Dictionary<object, object>)buttonVal.Value) {
+                                            // state.button properties
+                                            WriteLine($"          {buttonProp.Key}: {buttonProp.Value}");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case "transition":
+                        var transitionStr = prop.Value as string;
+                        if (transitionStr != null) {
+                            WriteLine(transitionStr); // state.transition string value
+                        }
+                        else {
+                            WriteLine("");
+                            foreach (var transitionProp in (Dictionary<object, object>)prop.Value) {
+                                // state.transition proprties (input, state)
+                                WriteLine($"      {transitionProp.Key}: {transitionProp.Value}");
+                            }
+                        }
+                        break;
+                    default:
+                        throw new System.Exception("Unexpected state property");
+                }
+            }
+        }
+        WriteLine("");
+    }
+#>

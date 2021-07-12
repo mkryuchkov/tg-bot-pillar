@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30709.132
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.Api", "TgBotPillar.Api\TgBotPillar.Api.csproj", "{480C4DD3-0F82-4B5C-9ACD-5F8AF7AEA9B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TgBotPillar.Api", "TgBotPillar.Api\TgBotPillar.Api.csproj", "{480C4DD3-0F82-4B5C-9ACD-5F8AF7AEA9B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.Fsm", "TgBotPillar.Fsm\TgBotPillar.Fsm.csproj", "{CE035582-8BB4-402B-956E-9F77B6459AB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{480C4DD3-0F82-4B5C-9ACD-5F8AF7AEA9B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{480C4DD3-0F82-4B5C-9ACD-5F8AF7AEA9B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{480C4DD3-0F82-4B5C-9ACD-5F8AF7AEA9B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE035582-8BB4-402B-956E-9F77B6459AB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE035582-8BB4-402B-956E-9F77B6459AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE035582-8BB4-402B-956E-9F77B6459AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE035582-8BB4-402B-956E-9F77B6459AB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

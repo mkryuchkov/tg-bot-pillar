@@ -1,0 +1,16 @@
+$schema: http://json-schema.org/draft-04/schema#
+id: TgBotPillar.Fsm.States.1
+title: FSM Schema
+description: Validation schema for bot FSM description
+type: object
+definitions:
+  State:
+    description: |
+      FSM State
+    type: object
+    properties:
+      text: string
+      buttons:
+        type: array
+        items:
+          type: '#/definitions/Button'

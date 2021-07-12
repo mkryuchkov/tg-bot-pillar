@@ -1,0 +1,4 @@
+waitlist:
+  text: |
+    Please, wait.
+  transition: waitlist
