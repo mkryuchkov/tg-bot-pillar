@@ -10,23 +10,24 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
+using TgBotPillar.Core.Interfaces;
 
-namespace TgBotPillar.Api.Services
+namespace TgBotPillar.Bot
 {
-    public class HandleUpdateService
+    public class UpdateHandlerService : IUpdateHandlerService<Update>
     {
         private readonly ITelegramBotClient _botClient;
-        private readonly ILogger<HandleUpdateService> _logger;
+        private readonly ILogger<UpdateHandlerService> _logger;
 
-        public HandleUpdateService(
+        public UpdateHandlerService(
             ITelegramBotClient botClient,
-            ILogger<HandleUpdateService> logger)
+            ILogger<UpdateHandlerService> logger)
         {
             _botClient = botClient;
             _logger = logger;
         }
 
-        public async Task EchoAsync(Update update)
+        public async Task HandleAsync(Update update)
         {
             var handler = update.Type switch
             {
@@ -36,12 +37,12 @@ namespace TgBotPillar.Api.Services
                 // UpdateType.ShippingQuery:
                 // UpdateType.PreCheckoutQuery:
                 // UpdateType.Poll:
-                UpdateType.Message            => BotOnMessageReceived(update.Message),
-                UpdateType.EditedMessage      => BotOnMessageReceived(update.Message),
-                UpdateType.CallbackQuery      => BotOnCallbackQueryReceived(update.CallbackQuery),
-                UpdateType.InlineQuery        => BotOnInlineQueryReceived(update.InlineQuery),
+                UpdateType.Message => BotOnMessageReceived(update.Message),
+                UpdateType.EditedMessage => BotOnMessageReceived(update.Message),
+                UpdateType.CallbackQuery => BotOnCallbackQueryReceived(update.CallbackQuery),
+                UpdateType.InlineQuery => BotOnInlineQueryReceived(update.InlineQuery),
                 UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(update.ChosenInlineResult),
-                _                             => UnknownUpdateHandlerAsync(update)
+                _ => UnknownUpdateHandlerAsync(update)
             };
 
             try
@@ -62,12 +63,12 @@ namespace TgBotPillar.Api.Services
 
             var action = message.Text.Split(' ').First() switch
             {
-                "/inline"   => SendInlineKeyboard(_botClient, message),
+                "/inline" => SendInlineKeyboard(_botClient, message),
                 "/keyboard" => SendReplyKeyboard(_botClient, message),
-                "/remove"   => RemoveKeyboard(_botClient, message),
-                "/photo"    => SendFile(_botClient, message),
-                "/request"  => RequestContactAndLocation(_botClient, message),
-                _           => Usage(_botClient, message)
+                "/remove" => RemoveKeyboard(_botClient, message),
+                "/photo" => SendFile(_botClient, message),
+                "/request" => RequestContactAndLocation(_botClient, message),
+                _ => Usage(_botClient, message)
             };
             var sentMessage = await action;
             _logger.LogInformation($"The message was sent with id: {sentMessage.MessageId}");
@@ -85,21 +86,21 @@ namespace TgBotPillar.Api.Services
                 InlineKeyboardMarkup inlineKeyboard = new(new[]
                 {
                     // first row
-                    new []
+                    new[]
                     {
                         InlineKeyboardButton.WithCallbackData("1.1", "11"),
                         InlineKeyboardButton.WithCallbackData("1.2", "12"),
                     },
                     // second row
-                    new []
+                    new[]
                     {
                         InlineKeyboardButton.WithCallbackData("2.1", "21"),
                         InlineKeyboardButton.WithCallbackData("2.2", "22"),
                     },
                 });
                 return await bot.SendTextMessageAsync(chatId: message.Chat.Id,
-                                                      text: "Choose",
-                                                      replyMarkup: inlineKeyboard);
+                    text: "Choose",
+                    replyMarkup: inlineKeyboard);
             }
 
             static async Task<Message> SendReplyKeyboard(ITelegramBotClient bot, Message message)
@@ -107,22 +108,22 @@ namespace TgBotPillar.Api.Services
                 ReplyKeyboardMarkup replyKeyboardMarkup = new(
                     new KeyboardButton[][]
                     {
-                        new KeyboardButton[] { "1.1", "1.2" },
-                        new KeyboardButton[] { "2.1", "2.2" },
+                        new KeyboardButton[] {"1.1", "1.2"},
+                        new KeyboardButton[] {"2.1", "2.2"},
                     },
                     resizeKeyboard: true
                 );
 
                 return await bot.SendTextMessageAsync(chatId: message.Chat.Id,
-                                                      text: "Choose",
-                                                      replyMarkup: replyKeyboardMarkup);
+                    text: "Choose",
+                    replyMarkup: replyKeyboardMarkup);
             }
 
             static async Task<Message> RemoveKeyboard(ITelegramBotClient bot, Message message)
             {
                 return await bot.SendTextMessageAsync(chatId: message.Chat.Id,
-                                                      text: "Removing keyboard",
-                                                      replyMarkup: new ReplyKeyboardRemove());
+                    text: "Removing keyboard",
+                    replyMarkup: new ReplyKeyboardRemove());
             }
 
             static async Task<Message> SendFile(ITelegramBotClient bot, Message message)
@@ -130,23 +131,23 @@ namespace TgBotPillar.Api.Services
                 await bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
 
                 const string filePath = @"img/69-specs.png";
-                using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                 var fileName = filePath.Split(Path.DirectorySeparatorChar).Last();
                 return await bot.SendPhotoAsync(chatId: message.Chat.Id,
-                                                photo: new InputOnlineFile(fileStream, fileName),
-                                                caption: "Nice Picture");
+                    photo: new InputOnlineFile(fileStream, fileName),
+                    caption: "Nice Picture");
             }
 
             static async Task<Message> RequestContactAndLocation(ITelegramBotClient bot, Message message)
             {
-                ReplyKeyboardMarkup RequestReplyKeyboard = new(new[]
+                ReplyKeyboardMarkup requestReplyKeyboard = new(new[]
                 {
                     KeyboardButton.WithRequestLocation("Location"),
                     KeyboardButton.WithRequestContact("Contact"),
                 });
                 return await bot.SendTextMessageAsync(chatId: message.Chat.Id,
-                                                      text: "Who or Where are you?",
-                                                      replyMarkup: RequestReplyKeyboard);
+                    text: "Who or Where are you?",
+                    replyMarkup: requestReplyKeyboard);
             }
 
             static async Task<Message> Usage(ITelegramBotClient bot, Message message)
@@ -158,8 +159,8 @@ namespace TgBotPillar.Api.Services
                                      "/photo    - send a photo\n" +
                                      "/request  - request location or contact";
                 return await bot.SendTextMessageAsync(chatId: message.Chat.Id,
-                                                      text: usage,
-                                                      replyMarkup: new ReplyKeyboardRemove());
+                    text: usage,
+                    replyMarkup: new ReplyKeyboardRemove());
             }
         }
 
@@ -167,19 +168,20 @@ namespace TgBotPillar.Api.Services
         private async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery)
         {
             await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id,
-                                                      $"Received {callbackQuery.Data}");
+                $"Received {callbackQuery.Data}");
 
             await _botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
-                                                  $"Received {callbackQuery.Data}");
+                $"Received {callbackQuery.Data}");
         }
 
         #region Inline Mode
 
         private async Task BotOnInlineQueryReceived(InlineQuery inlineQuery)
         {
-           _logger.LogInformation($"Received inline query from: {inlineQuery.From.Id}");
+            _logger.LogInformation($"Received inline query from: {inlineQuery.From.Id}");
 
-            InlineQueryResultBase[] results = {
+            InlineQueryResultBase[] results =
+            {
                 // displayed result
                 new InlineQueryResultArticle(
                     id: "3",
@@ -191,9 +193,9 @@ namespace TgBotPillar.Api.Services
             };
 
             await _botClient.AnswerInlineQueryAsync(inlineQueryId: inlineQuery.Id,
-                                                    results: results,
-                                                    isPersonal: true,
-                                                    cacheTime: 0);
+                results: results,
+                isPersonal: true,
+                cacheTime: 0);
         }
 
         private Task BotOnChosenInlineResultReceived(ChosenInlineResult chosenInlineResult)
@@ -212,13 +214,14 @@ namespace TgBotPillar.Api.Services
 
         public Task HandleErrorAsync(Exception exception)
         {
-            var ErrorMessage = exception switch
+            var errorMessage = exception switch
             {
-                ApiRequestException apiRequestException => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+                ApiRequestException apiRequestException =>
+                    $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
                 _ => exception.ToString()
             };
 
-            _logger.LogInformation(ErrorMessage);
+            _logger.LogInformation(errorMessage);
             return Task.CompletedTask;
         }
     }

@@ -1,6 +1,6 @@
-namespace TgBotPillar.Api.Model
+namespace TgBotPillar.Bot.Configuration
 {
-    internal class BotConfiguration
+    public class BotConfiguration
     {
         public string Token { get; init; }
         public string Host { get; init; }

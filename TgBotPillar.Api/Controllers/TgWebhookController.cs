@@ -1,21 +1,23 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
-using TgBotPillar.Api.Services;
+using TgBotPillar.Core.Interfaces;
 
 namespace TgBotPillar.Api.Controllers
 {
-    public class WebhookController : ControllerBase
+    public class TgWebhookController : ControllerBase
     {
         [HttpPost]
         public async Task<IActionResult> Post(
-            [FromServices] HandleUpdateService handleUpdateService,
+            [FromServices] IUpdateHandlerService<Update> updateHandlerService,
             [FromBody] Update update)
         {
-            if (update == null) {
+            if (update == null)
+            {
                 return BadRequest();
             }
-            await handleUpdateService.EchoAsync(update);
+
+            await updateHandlerService.HandleAsync(update);
             return Ok();
         }
     }

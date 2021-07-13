@@ -8,11 +8,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Types.InputFiles;
-using TgBotPillar.Api.Model;
 
-namespace TgBotPillar.Api.Services
+namespace TgBotPillar.Bot.Configuration
 {
-    internal class ConfigureWebHook : IHostedService
+    public class ConfigureWebHook : IHostedService
     {
         private readonly ILogger<ConfigureWebHook> _logger;
         private readonly IServiceProvider _services;
@@ -35,9 +34,6 @@ namespace TgBotPillar.Api.Services
 
             // Configure custom endpoint per Telegram API recommendations:
             // https://core.telegram.org/bots/api#setwebhook
-            // If you'd like to make sure that the Webhook request comes from Telegram, we recommend
-            // using a secret path in the URL, e.g. https://www.example.com/<token>.
-            // Since nobody else knows your bot's token, you can be pretty sure it's us.
             var webhookAddress = @$"{_config.Host}/bot/{_config.Token}";
             _logger.LogInformation("Setting webhook: ", webhookAddress);
 
@@ -57,8 +53,9 @@ namespace TgBotPillar.Api.Services
                     webhookAddress,
                     certInput,
                     cancellationToken: cancellationToken);
-                
-                if (certInput?.Content != null) {
+
+                if (certInput?.Content != null)
+                {
                     await certInput.Content.DisposeAsync();
                 }
             }

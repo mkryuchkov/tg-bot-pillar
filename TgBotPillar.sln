@@ -5,9 +5,21 @@ VisualStudioVersion = 16.0.30709.132
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TgBotPillar.Api", "TgBotPillar.Api\TgBotPillar.Api.csproj", "{480C4DD3-0F82-4B5C-9ACD-5F8AF7AEA9B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.Fsm", "TgBotPillar.Fsm\TgBotPillar.Fsm.csproj", "{CE035582-8BB4-402B-956E-9F77B6459AB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.StateProcessor", "TgBotPillar.StateProcessor\TgBotPillar.StateProcessor.csproj", "{CE035582-8BB4-402B-956E-9F77B6459AB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.Common", "TgBotPillar.Common\TgBotPillar.Common.csproj", "{C920ABD4-F8D2-4422-88F4-7E9C3A5D52A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.Core", "TgBotPillar.Core\TgBotPillar.Core.csproj", "{A8E3FF2C-0792-4B64-9177-48E6FF9C5B25}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Common", "0. Common", "{548579D3-9863-444B-9257-34CC0686490F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Service", "1. Service", "{CF12435D-6777-4479-B6D6-717A95227832}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Application", "2. Application", "{9017039B-8D52-4440-8018-0086D52FB68B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.Bot", "TgBotPillar.Bot\TgBotPillar.Bot.csproj", "{AEEA88CE-6016-4FF7-81E1-6523563AD97A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.Storage", "TgBotPillar.Storage\TgBotPillar.Storage.csproj", "{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,11 +39,31 @@ Global
 		{C920ABD4-F8D2-4422-88F4-7E9C3A5D52A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C920ABD4-F8D2-4422-88F4-7E9C3A5D52A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C920ABD4-F8D2-4422-88F4-7E9C3A5D52A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8E3FF2C-0792-4B64-9177-48E6FF9C5B25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8E3FF2C-0792-4B64-9177-48E6FF9C5B25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8E3FF2C-0792-4B64-9177-48E6FF9C5B25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8E3FF2C-0792-4B64-9177-48E6FF9C5B25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEEA88CE-6016-4FF7-81E1-6523563AD97A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEEA88CE-6016-4FF7-81E1-6523563AD97A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEEA88CE-6016-4FF7-81E1-6523563AD97A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEEA88CE-6016-4FF7-81E1-6523563AD97A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E3CD9F2-53A2-4C45-9145-DE343DBFCEE0}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C920ABD4-F8D2-4422-88F4-7E9C3A5D52A1} = {548579D3-9863-444B-9257-34CC0686490F}
+		{A8E3FF2C-0792-4B64-9177-48E6FF9C5B25} = {548579D3-9863-444B-9257-34CC0686490F}
+		{480C4DD3-0F82-4B5C-9ACD-5F8AF7AEA9B9} = {9017039B-8D52-4440-8018-0086D52FB68B}
+		{CE035582-8BB4-402B-956E-9F77B6459AB2} = {CF12435D-6777-4479-B6D6-717A95227832}
+		{AEEA88CE-6016-4FF7-81E1-6523563AD97A} = {CF12435D-6777-4479-B6D6-717A95227832}
+		{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0} = {CF12435D-6777-4479-B6D6-717A95227832}
 	EndGlobalSection
 EndGlobal

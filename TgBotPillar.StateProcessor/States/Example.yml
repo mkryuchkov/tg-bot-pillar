@@ -14,7 +14,7 @@ question:
   text: |
     What is your profession?
   transition:
-    input: question_answer_handler
+    input: question_input_handler
     state: hello
 
 info:
