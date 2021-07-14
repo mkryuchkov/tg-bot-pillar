@@ -4,6 +4,6 @@ namespace TgBotPillar.StateProcessor.Model
     {
         public string Label { get; init; }
 
-        public Transition Transition { get; set; }
+        public string NextState { get; init; }
     }
 }

@@ -1,0 +1,29 @@
+hello: # state id (unique)
+  text: |
+    Hello, my friend!
+    It's example.
+  buttons: # optional
+    some_button:
+      label: Question! # optional; id used instead
+      transition: question # transition state id
+    info: # label => Info; transioton => info
+    menu: # label => Menu
+      transition: menu
+
+question:
+  text: |
+    What is your profession?
+  transition: hello
+  input: question_input_handler
+
+info:
+  text: |
+    Some description
+  transition: menu
+
+menu:
+  text: |
+    Menu
+  buttons:
+    info:
+    question:

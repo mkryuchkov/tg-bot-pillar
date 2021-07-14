@@ -2,8 +2,8 @@ namespace TgBotPillar.StateProcessor.Model
 {
     public class Transition
     {
-        public string StateName { get; init; }
+        public string State { get; init; }
 
-        public string InputField { get; init; }
+        public string Input { get; init; }
     }
 }

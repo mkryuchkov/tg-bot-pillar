@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TgBotPillar.Common;
 using TgBotPillar.Core.Interfaces;
+using TgBotPillar.StateProcessor.Configuration;
 using TgBotPillar.StateProcessor.Model;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -15,78 +17,67 @@ namespace TgBotPillar.StateProcessor
     public class StateProcessorService : IStateProcessorService
     {
         private readonly ILogger<StateProcessorService> _logger;
-        private readonly string _path;
 
         public StateProcessorService(
             ILogger<StateProcessorService> logger,
-            IOptions<DialogProcessorConfiguration> options)
+            IOptions<StateProcessorConfiguration> options)
         {
             _logger = logger;
-            _path = options.Value.FolderPath;
-            // TODO: init from config folder ymls
+
+            States = new Dictionary<string, State>();
+
+            Initialization = InitializeAsync(options.Value.FolderPath);
+        }
+
+        public Task Initialization { get; }
+
+        public IReadOnlyDictionary<string, State> States { get; private set; }
+
+        private async Task InitializeAsync(string folderPath)
+        {
+            var allStates = new Dictionary<string, State>();
 
             var deserializer = new DeserializerBuilder()
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
-            var dirInfo = new DirectoryInfo(_path);
+            var dirInfo = new DirectoryInfo(folderPath);
 
             foreach (var fileInfo in dirInfo.GetFiles("*.yml"))
             {
-                // WriteLine($"{fileInfo.Name}:"); // Filename
-                var states = deserializer.Deserialize<
-                    Dictionary<string, Dictionary<string, object>>>(
-                    File.ReadAllText(fileInfo.FullName));
-                foreach (var prop in states.SelectMany(state => state.Value))
+                var states = deserializer.Deserialize<Dictionary<string, Dictionary<string, object>>>(
+                    await File.ReadAllTextAsync(fileInfo.FullName));
+
+                foreach (var (key, value) in states.AsEnumerable())
                 {
-                    // Write($"    {prop.Key}: "); // State property (1 of 3)
-                    switch (prop.Key)
+                    var buttons = value.TryGetValue("buttons", out var buttonValues)
+                        ? ((Dictionary<object, object>) buttonValues)
+                        .Select(button => new KeyValuePair<string, Button>((string) button.Key, new Button
+                        {
+                            Label = ((string) (button.Value is Dictionary<object, object> buttonDict
+                                ? buttonDict.TryGetValue("label", out var label) ? label : button.Key
+                                : button.Key)).FirstCharToUpper(),
+                            NextState = (string) (button.Value is Dictionary<object, object> buttonDict2
+                                ? buttonDict2.TryGetValue("transition", out var buttonTransition)
+                                    ? buttonTransition
+                                    : button.Key
+                                : button.Key)
+                        }))
+                        .ToDictionary(_ => _.Key, _ => _.Value)
+                        : new Dictionary<string, Button>();
+
+                    allStates.Add(key, new State
                     {
-                        case "text":
-                            // WriteLine(prop.Value.ToString().Replace('\n', ' ')); // state.text value
-                            break;
-                        case "buttons":
-                            if (prop.Value != null)
-                            {
-                                // WriteLine("");
-                                foreach (var button in (List<object>) prop.Value)
-                                {
-                                    foreach (var buttonVal in (Dictionary<object, object>) button)
-                                    {
-                                        // WriteLine($"      - {buttonVal.Key}:"); // state.button name
-                                        if (buttonVal.Value == null) continue;
-                                        foreach (var buttonProp in (Dictionary<object, object>) buttonVal.Value)
-                                        {
-                                            // state.button properties
-                                            // WriteLine($"          {buttonProp.Key}: {buttonProp.Value}");
-                                        }
-                                    }
-                                }
-                            }
-
-                            break;
-                        case "transition":
-                            if (prop.Value is string transitionStr)
-                            {
-                                // WriteLine(transitionStr); // state.transition string value
-                            }
-                            else
-                            {
-                                // WriteLine("");
-                                foreach (var transitionProp in (Dictionary<object, object>) prop.Value)
-                                {
-                                    // state.transition proprties (input, state)
-                                    // WriteLine($"      {transitionProp.Key}: {transitionProp.Value}");
-                                }
-                            }
-
-                            break;
-                        default:
-                            throw new Exception("Unexpected state property");
-                    }
+                        Text = (value.TryGetValue("text", out var text) ? text : string.Empty) as string,
+                        Buttons = buttons,
+                        Transition =
+                            (value.TryGetValue("transition", out var transition) ? transition : string.Empty) as string,
+                        Input = (value.TryGetValue("input", out var input) ? input : string.Empty) as string,
+                    });
                 }
-                // WriteLine("");
             }
+
+            States = allStates;
         }
 
         public Task<object> Process(object context, object update)

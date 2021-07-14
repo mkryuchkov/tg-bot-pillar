@@ -8,6 +8,8 @@ namespace TgBotPillar.StateProcessor.Model
 
         public IReadOnlyDictionary<string, Button> Buttons { get; init; }
 
-        public Transition Transition { get; init; }
+        public string Transition { get; init; }
+        
+        public string Input { get; init; }
     }
 }

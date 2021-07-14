@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.Bot", "TgBotPil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.Storage", "TgBotPillar.Storage\TgBotPillar.Storage.csproj", "{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotPillar.StateProcessor.Tests", "TgBotPillar.StateProcessor.Tests\TgBotPillar.StateProcessor.Tests.csproj", "{D9252C23-715D-45B8-A15F-73B8F7BF3C2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9252C23-715D-45B8-A15F-73B8F7BF3C2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9252C23-715D-45B8-A15F-73B8F7BF3C2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9252C23-715D-45B8-A15F-73B8F7BF3C2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9252C23-715D-45B8-A15F-73B8F7BF3C2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,5 +71,6 @@ Global
 		{CE035582-8BB4-402B-956E-9F77B6459AB2} = {CF12435D-6777-4479-B6D6-717A95227832}
 		{AEEA88CE-6016-4FF7-81E1-6523563AD97A} = {CF12435D-6777-4479-B6D6-717A95227832}
 		{B5D9BA2F-DAE8-417B-8D91-4457F8589BE0} = {CF12435D-6777-4479-B6D6-717A95227832}
+		{D9252C23-715D-45B8-A15F-73B8F7BF3C2E} = {CF12435D-6777-4479-B6D6-717A95227832}
 	EndGlobalSection
 EndGlobal

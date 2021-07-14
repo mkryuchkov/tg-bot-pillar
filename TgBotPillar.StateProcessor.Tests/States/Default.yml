@@ -8,6 +8,6 @@ help: # /help command
   transition: menu
 
 settings: # /settings command
-  test: |
+  text: |
     Settings
-  transioton: menu
+  transition: menu
