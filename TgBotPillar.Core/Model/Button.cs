@@ -1,4 +1,4 @@
-namespace TgBotPillar.StateProcessor.Model
+namespace TgBotPillar.Core.Model
 {
     public class Button
     {

@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TgBotPillar.Core.Model;
 
 namespace TgBotPillar.Core.Interfaces
 {
     public interface IStateProcessorService
     {
-        Task Initialization { get; }
+        Task<State> GetStartStateAsync();
         
-        Task<object> Process(object context, object update);
+        Task<Tuple<string, State>> GetNextStateAsync(string state, string button);
     }
 }

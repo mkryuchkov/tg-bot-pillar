@@ -32,8 +32,6 @@ namespace TgBotPillar.Bot.Configuration
             using var scope = _services.CreateScope();
             var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-            // Configure custom endpoint per Telegram API recommendations:
-            // https://core.telegram.org/bots/api#setwebhook
             var webhookAddress = @$"{_config.Host}/bot/{_config.Token}";
             _logger.LogInformation("Setting webhook: ", webhookAddress);
 
@@ -66,7 +64,6 @@ namespace TgBotPillar.Bot.Configuration
             using var scope = _services.CreateScope();
             var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-            // Remove webhook upon app shutdown
             _logger.LogInformation("Removing webhook");
             await botClient.DeleteWebhookAsync(cancellationToken: cancellationToken);
         }

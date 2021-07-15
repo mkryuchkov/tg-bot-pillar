@@ -7,8 +7,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TgBotPillar.Common;
 using TgBotPillar.Core.Interfaces;
+using TgBotPillar.Core.Model;
 using TgBotPillar.StateProcessor.Configuration;
-using TgBotPillar.StateProcessor.Model;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -35,6 +35,7 @@ namespace TgBotPillar.StateProcessor
 
         private async Task InitializeAsync(string folderPath)
         {
+            _logger.LogInformation("Initialisation started");
             var allStates = new Dictionary<string, State>();
 
             var deserializer = new DeserializerBuilder()
@@ -78,11 +79,22 @@ namespace TgBotPillar.StateProcessor
             }
 
             States = allStates;
+            _logger.LogInformation("Initialisation finished");
         }
 
-        public Task<object> Process(object context, object update)
+        public async Task<State> GetStartStateAsync()
         {
-            throw new NotImplementedException();
+            await Initialization;
+            _logger.LogInformation("Get start state");
+            return States["start"];
+        }
+
+        public async Task<Tuple<string, State>> GetNextStateAsync(string state, string button)
+        {
+            await Initialization;
+            var nextState = States[state].Buttons[button].NextState;
+            _logger.LogInformation($"Get next state for {state}[{button}]: {States[nextState]}");
+            return new Tuple<string, State>(nextState, States[nextState]);
         }
     }
 }

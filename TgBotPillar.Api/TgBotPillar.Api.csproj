@@ -13,6 +13,7 @@
     <ProjectReference Include="..\TgBotPillar.Core\TgBotPillar.Core.csproj" />
     <ProjectReference Include="..\TgBotPillar.StateProcessor\TgBotPillar.StateProcessor.csproj" />
     <ProjectReference Include="..\TgBotPillar.Bot\TgBotPillar.Bot.csproj" />
+    <ProjectReference Include="..\TgBotPillar.Storage\TgBotPillar.Storage.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />

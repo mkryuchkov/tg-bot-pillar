@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TgBotPillar.Bot.Configuration;
+using TgBotPillar.StateProcessor.Configuration;
+using TgBotPillar.Storage.Configuration;
 
 namespace TgBotPillar.Api
 {
@@ -18,6 +20,8 @@ namespace TgBotPillar.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureStorageService(Configuration);
+            services.ConfigureStateProcessor(Configuration);
             services.ConfigureTgBot(Configuration);
         }
 
@@ -35,7 +39,7 @@ namespace TgBotPillar.Api
                     $"bot/{Configuration[$"{nameof(BotConfiguration)}:Token"]}",
                     new
                     {
-                        controller = "webhook",
+                        controller = "tgWebhook",
                         action = "Post"
                     });
                 // endpoints.MapControllers();

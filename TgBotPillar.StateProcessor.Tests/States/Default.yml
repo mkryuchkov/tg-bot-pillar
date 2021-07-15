@@ -1,13 +1,15 @@
 # Tg Bot default commands
 start: # /start command; initial state
-  transition: waitlist
+  text: |
+    Welcome!
+  buttons:
+    hello:
+      label: Hello!
 
 help: # /help command
   text: |
     Help
-  transition: menu
 
 settings: # /settings command
   text: |
     Settings
-  transition: menu
