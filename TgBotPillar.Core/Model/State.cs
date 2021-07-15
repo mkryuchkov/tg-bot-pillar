@@ -6,10 +6,13 @@ namespace TgBotPillar.Core.Model
     {
         public string Text { get; init; }
 
-        public IReadOnlyDictionary<string, Button> Buttons { get; init; }
+        public IList<Button> Buttons { get; init; }
 
-        public string Transition { get; init; }
+        public Input Input { get; init; }
         
-        public string Input { get; init; }
+        public State()
+        {
+            Buttons = new List<Button>();
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace TgBotPillar.Core.Interfaces
     public interface IStateProcessorService
     {
         Task<State> GetStartStateAsync();
-        
-        Task<Tuple<string, State>> GetNextStateAsync(string state, string button);
+
+        Task<State> GetStateAsync(string stateName);
     }
 }

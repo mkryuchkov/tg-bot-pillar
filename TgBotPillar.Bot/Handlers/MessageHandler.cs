@@ -23,14 +23,14 @@ namespace TgBotPillar.Bot
                 await (await _stateProcessor.GetStartStateAsync())
                     .SendNewMessageAsync(_botClient, message.Chat.Id);
             }
-            // else
-            // {
+            else
+            {
                 // check state has input
                 //   call input handler
                 //     ok -> get new state
                 //           create response (new state)
                 //   bad -> create response (error message) // keep state
-            // }
+            }
         }
     }
 }

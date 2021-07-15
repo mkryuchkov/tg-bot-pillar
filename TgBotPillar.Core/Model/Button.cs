@@ -1,9 +1,17 @@
+using TgBotPillar.Common;
+
 namespace TgBotPillar.Core.Model
 {
     public class Button
     {
-        public string Label { get; init; }
+        private readonly string _label;
 
-        public string NextState { get; init; }
+        public string Label
+        {
+            get => _label ?? Transition.FirstCharToUpper();
+            init => _label = value;
+        }
+
+        public string Transition { get; init; }
     }
 }

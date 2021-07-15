@@ -14,12 +14,12 @@ namespace TgBotPillar.Bot
 
             await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id,
                 $"Received {callbackQuery.Data}");
+            
+            var state = await _stateProcessor.GetStateAsync(callbackQuery.Data);
 
-            var context = await _storageService.GetContextAsync(callbackQuery.Message.Chat.Id);
-
-            var (stateName, state) = await _stateProcessor.GetNextStateAsync(context.State, callbackQuery.Data);
-
-            await _storageService.UpdateStateAsync(callbackQuery.Message.Chat.Id, stateName);
+            // todo: what if new state have input!
+            
+            await _storageService.UpdateStateAsync(callbackQuery.Message.Chat.Id, callbackQuery.Data);
             
             await state.UpdateLastMessageAsync(_botClient,
                 callbackQuery.Message.Chat.Id,

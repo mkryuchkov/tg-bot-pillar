@@ -3,8 +3,8 @@ start: # /start command; initial state
   text: |
     Welcome!
   buttons:
-    hello:
-      label: Hello!
+  - transition: hello
+    label: Hello!
 
 help: # /help command
   text: |

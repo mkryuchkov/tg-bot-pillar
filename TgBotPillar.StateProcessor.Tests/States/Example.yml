@@ -3,32 +3,38 @@ hello: # state id (unique)
     Hello, my friend!
     It's example.
   buttons:
-    menu:
+    - transition: menu
 
 menu:
   text: |
     Menu
   buttons:
-    info:
-    some_button:
-      label: Question! # optional; id used instead
-      transition: question # transition state id
-    hello:
+    - transition: info
+    - transition: question
+      label: Question! # optional
+    - transition: hello
 
 info:
   text: |
     Some description
   buttons:
-    menu:
+    - transition: menu
       label: Back
 
 question:
   text: |
     What is your profession?
   buttons:
-    menu:
+    - transition: menu
       label: Back
-  input: question_input_handler
+  input:
+    handler: question_input_handler # can provide transition
+    options:
+      - text: Programmer, Sir!
+        transition: menu
+      - text: Manager, Sir!
+        transition: menu
+    default_transition: menu
 
 
 

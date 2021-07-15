@@ -29,19 +29,23 @@ namespace TgBotPillar.StateProcessor.Tests
                     _testOutputHelper.WriteLine($"  Text: {stateValue.Text.Replace('\n', ' ')}");
                 }
 
-                foreach (var (buttonKey, buttonValue) in stateValue.Buttons)
+                foreach (var button in stateValue.Buttons)
                 {
-                    _testOutputHelper.WriteLine($"  Button: {buttonKey}, {buttonValue.Label}, {buttonValue.NextState}");
+                    _testOutputHelper.WriteLine($"  Button: {button.Label}, {button.Transition}");
                 }
 
-                if (!string.IsNullOrEmpty(stateValue.Transition))
+                if (stateValue.Input != null)
                 {
-                    _testOutputHelper.WriteLine($"  Transition: {stateValue.Transition}");
-                }
-
-                if (!string.IsNullOrEmpty(stateValue.Input))
-                {
-                    _testOutputHelper.WriteLine($"  Input: {stateValue.Input}");
+                    _testOutputHelper.WriteLine("  Input:");
+                    _testOutputHelper.WriteLine($"    Handler: {stateValue.Input.Handler}");
+                    
+                    _testOutputHelper.WriteLine("    Options:");
+                    foreach (var option in stateValue.Input.Options)
+                    {
+                        _testOutputHelper.WriteLine($"      {option.Text}, {option.Transition}");
+                    }
+                    
+                    _testOutputHelper.WriteLine($"    DefaultTransition: {stateValue.Input.DefaultTransition}");
                 }
 
                 _testOutputHelper.WriteLine(string.Empty);
