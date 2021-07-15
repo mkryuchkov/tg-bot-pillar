@@ -16,7 +16,7 @@ menu:
 
 info:
   text: |
-    Some description
+    Some usefull information
   buttons:
     - transition: menu
       label: Back
