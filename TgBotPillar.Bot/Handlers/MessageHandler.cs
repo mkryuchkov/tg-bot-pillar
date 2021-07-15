@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -16,21 +17,23 @@ namespace TgBotPillar.Bot
             if (message.Type != MessageType.Text)
                 return;
 
-            var context = await _storageService.GetContextAsync(message.Chat.Id);
+            var stateName = (await _storageService.GetContextAsync(message.Chat.Id)).State;
+            var state = await _stateProcessor.GetStateAsync(stateName);
 
-            if (context.State == DefaultState.Start)
+            if (stateName != DefaultState.Start || state.Input != null)
             {
-                await (await _stateProcessor.GetStartStateAsync())
-                    .SendNewMessageAsync(_botClient, message.Chat.Id);
+                var (newName, newState) = await _stateProcessor.GetNewStateAsync(stateName, message.Text);
+                if (newName != stateName)
+                {
+                    await _storageService.UpdateStateAsync(message.Chat.Id, newName);
+                    state = newState;
+                }
             }
-            else
-            {
-                // check state has input
-                //   call input handler
-                //     ok -> get new state
-                //           create response (new state)
-                //   bad -> create response (error message) // keep state
-            }
+
+            await _botClient.SendTextMessageAsync(
+                message.Chat.Id,
+                state.Text,
+                replyMarkup: state.GetKeyboard());
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using TgBotPillar.Core.Interfaces;
 using Xunit;

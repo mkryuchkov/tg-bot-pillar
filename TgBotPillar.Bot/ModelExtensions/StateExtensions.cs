@@ -1,27 +1,15 @@
-﻿using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot.Types.ReplyMarkups;
 using TgBotPillar.Core.Model;
 
 namespace TgBotPillar.Bot.ModelExtensions
 {
     public static class StateExtensions
     {
-        public static async Task UpdateLastMessageAsync(this State state,
-            ITelegramBotClient bot,
-            long chatId, int messageId)
+        public static IReplyMarkup GetKeyboard(this State state)
         {
-            await bot.EditMessageTextAsync(chatId, messageId,
-                state.Text,
-                replyMarkup: state.Buttons.GetKeyboardMarkup());
-        }
-        
-        public static async Task SendNewMessageAsync(this State state,
-            ITelegramBotClient bot,
-            long chatId)
-        {
-            await bot.SendTextMessageAsync(chatId,
-                state.Text,
-                replyMarkup: state.Buttons.GetKeyboardMarkup());
+            return state.Input != null
+                ? state.Input.GetKeyboard()
+                : state.Buttons.GetInlineKeyboard();
         }
     }
 }

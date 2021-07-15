@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -56,16 +58,22 @@ namespace TgBotPillar.StateProcessor
             _logger.LogInformation("Initialisation finished");
         }
 
-        public Task<State> GetStartStateAsync()
-        {
-            return GetStateAsync(DefaultState.Start);
-        }
-
         public async Task<State> GetStateAsync(string stateName)
         {
             await Initialization;
             _logger.LogInformation($"Get {stateName} state");
             return States[stateName];
+        }
+
+        public async Task<Tuple<string, State>> GetNewStateAsync(string state, string inputText)
+        {
+            await Initialization;
+            _logger.LogInformation($"Get new state by input text {inputText}");
+            var stateName = States[state].Input.Options
+                                .FirstOrDefault(option => option.Text == inputText)?.Transition
+                            ?? States[state].Input.DefaultTransition
+                            ?? state;
+            return new Tuple<string, State>(stateName, States[stateName]);
         }
     }
 }

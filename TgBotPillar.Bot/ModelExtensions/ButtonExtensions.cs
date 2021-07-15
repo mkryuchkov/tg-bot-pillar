@@ -7,7 +7,7 @@ namespace TgBotPillar.Bot.ModelExtensions
 {
     public static class ButtonExtensions
     {
-        public static InlineKeyboardMarkup GetKeyboardMarkup(
+        public static InlineKeyboardMarkup GetInlineKeyboard(
             this IEnumerable<Button> buttons)
         {
             return new(new[]
