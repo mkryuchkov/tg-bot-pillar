@@ -17,13 +17,14 @@ namespace TgBotPillar.Bot
             if (message.Type != MessageType.Text)
                 return;
 
-            var stateName = (await _storageService.GetContextAsync(message.Chat.Id)).State;
-            var state = await _stateProcessor.GetStateAsync(stateName);
+            var context = (await _storageService.GetContextAsync(message.Chat.Id));
+            var state = await _stateProcessor.GetStateAsync(context.State);
 
-            if (stateName != DefaultState.Start || state.Input != null)
+            if (context.State != DefaultState.Start || state.Input != null)
             {
-                var (newName, newState) = await _stateProcessor.GetNewStateAsync(stateName, message.Text);
-                if (newName != stateName)
+                await _inputHandlersManager.HandleAsync(state.Input.Handler, context);
+                var (newName, newState) = await _stateProcessor.GetNewStateAsync(context.State, message.Text);
+                if (newName != context.State)
                 {
                     await _storageService.UpdateStateAsync(message.Chat.Id, newName);
                     state = newState;

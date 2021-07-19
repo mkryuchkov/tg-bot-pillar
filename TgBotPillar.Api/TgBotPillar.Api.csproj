@@ -9,11 +9,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TgBotPillar.Bot.Input\TgBotPillar.Bot.Input.csproj" />
     <ProjectReference Include="..\TgBotPillar.Common\TgBotPillar.Common.csproj" />
     <ProjectReference Include="..\TgBotPillar.Core\TgBotPillar.Core.csproj" />
     <ProjectReference Include="..\TgBotPillar.StateProcessor\TgBotPillar.StateProcessor.csproj" />
     <ProjectReference Include="..\TgBotPillar.Bot\TgBotPillar.Bot.csproj" />
-    <ProjectReference Include="..\TgBotPillar.Storage\TgBotPillar.Storage.csproj" />
+    <ProjectReference Include="..\TgBotPillar.Storage.InMemory\TgBotPillar.Storage.InMemory.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />

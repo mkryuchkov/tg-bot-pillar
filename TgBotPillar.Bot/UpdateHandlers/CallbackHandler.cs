@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 using TgBotPillar.Bot.ModelExtensions;
 
 namespace TgBotPillar.Bot

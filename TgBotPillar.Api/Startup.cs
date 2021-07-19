@@ -4,8 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TgBotPillar.Bot.Configuration;
+using TgBotPillar.Bot.Input.Configuration;
 using TgBotPillar.StateProcessor.Configuration;
-using TgBotPillar.Storage.Configuration;
+using TgBotPillar.Storage.InMemory.Configuration;
 
 namespace TgBotPillar.Api
 {
@@ -20,8 +21,10 @@ namespace TgBotPillar.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureStorageService(Configuration);
+            // todo: choose storage depending on config
+            services.ConfigureInMemoryStorageService();
             services.ConfigureStateProcessor(Configuration);
+            services.ConfigureTgBotInputHandlers(Configuration);
             services.ConfigureTgBot(Configuration);
         }
 

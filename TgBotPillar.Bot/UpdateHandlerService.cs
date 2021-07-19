@@ -13,17 +13,20 @@ namespace TgBotPillar.Bot
         private readonly ITelegramBotClient _botClient;
         private readonly ILogger<UpdateHandlerService> _logger;
         private readonly IStateProcessorService _stateProcessor;
+        private readonly IInputHandlersManager _inputHandlersManager;
         private readonly IStorageService _storageService;
 
         public UpdateHandlerService(
             ITelegramBotClient botClient,
             ILogger<UpdateHandlerService> logger,
             IStateProcessorService stateProcessor,
+            IInputHandlersManager inputHandlersManager,
             IStorageService storageService)
         {
             _botClient = botClient;
             _logger = logger;
             _stateProcessor = stateProcessor;
+            _inputHandlersManager = inputHandlersManager;
             _storageService = storageService;
         }
 

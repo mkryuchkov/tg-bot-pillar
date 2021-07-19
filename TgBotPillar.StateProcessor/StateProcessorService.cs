@@ -22,9 +22,7 @@ namespace TgBotPillar.StateProcessor
             IOptions<StateProcessorConfiguration> options)
         {
             _logger = logger;
-
             States = new Dictionary<string, State>();
-
             Initialization = InitializeAsync(options.Value.FolderPath);
         }
 
@@ -34,7 +32,7 @@ namespace TgBotPillar.StateProcessor
 
         private async Task InitializeAsync(string folderPath)
         {
-            _logger.LogInformation("Initialisation started");
+            _logger.LogInformation("Initialization started");
             var allStates = new Dictionary<string, State>();
 
             var deserializer = new DeserializerBuilder()
@@ -55,7 +53,7 @@ namespace TgBotPillar.StateProcessor
             }
 
             States = allStates;
-            _logger.LogInformation("Initialisation finished");
+            _logger.LogInformation("Initialization completed");
         }
 
         public async Task<State> GetStateAsync(string stateName)

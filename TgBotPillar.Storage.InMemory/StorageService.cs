@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using TgBotPillar.Core.Interfaces;
 using TgBotPillar.Core.Model;
 
-namespace TgBotPillar.Storage
+namespace TgBotPillar.Storage.InMemory
 {
     public class StorageService : IStorageService
     {
