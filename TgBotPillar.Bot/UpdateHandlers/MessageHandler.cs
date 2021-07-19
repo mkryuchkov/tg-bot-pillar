@@ -17,7 +17,7 @@ namespace TgBotPillar.Bot
             if (message.Type != MessageType.Text)
                 return;
 
-            var context = (await _storageService.GetContextAsync(message.Chat.Id));
+            var context = await _storageService.GetContextAsync(message.Chat.Id);
             var state = await _stateProcessor.GetStateAsync(context.State);
 
             if (context.State != DefaultState.Start || state.Input != null)

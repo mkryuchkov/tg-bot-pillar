@@ -41,7 +41,7 @@ namespace TgBotPillar.Bot.Input
             await Task.CompletedTask;
         }
 
-        public async Task HandleAsync(string name, DialogContext context)
+        public async Task HandleAsync(string name, IDialogContext context)
         {
             await _initialization;
             _logger.LogInformation(message: await _handlers[name].HandleAsync(context) as string);

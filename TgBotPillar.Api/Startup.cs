@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using TgBotPillar.Bot.Configuration;
 using TgBotPillar.Bot.Input.Configuration;
 using TgBotPillar.StateProcessor.Configuration;
-using TgBotPillar.Storage.InMemory.Configuration;
+using TgBotPillar.Storage.Mongo.Configuration;
 
 namespace TgBotPillar.Api
 {
@@ -21,8 +21,7 @@ namespace TgBotPillar.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // todo: choose storage depending on config
-            services.ConfigureInMemoryStorageService();
+            services.ConfigureMongoStorage(Configuration);
             services.ConfigureStateProcessor(Configuration);
             services.ConfigureTgBotInputHandlers(Configuration);
             services.ConfigureTgBot(Configuration);

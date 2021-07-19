@@ -6,6 +6,6 @@ namespace TgBotPillar.Bot.Input
     internal interface IInputHandler
     {
         string Name { get; }
-        Task<object> HandleAsync(DialogContext context);
+        Task<object> HandleAsync(IDialogContext context);
     }
 }

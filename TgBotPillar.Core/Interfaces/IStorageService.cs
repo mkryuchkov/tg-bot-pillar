@@ -5,7 +5,7 @@ namespace TgBotPillar.Core.Interfaces
 {
     public interface IStorageService
     {
-        Task<DialogContext> GetContextAsync(long chatId);
+        Task<IDialogContext> GetContextAsync(long chatId);
         
         Task UpdateStateAsync(long chatId, string stateName);
     }

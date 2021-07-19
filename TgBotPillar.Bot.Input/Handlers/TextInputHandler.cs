@@ -7,7 +7,7 @@ namespace TgBotPillar.Bot.Input.Handlers
     {
         public string Name => "text_input_handler";
 
-        public Task<object> HandleAsync(DialogContext context)
+        public Task<object> HandleAsync(IDialogContext context)
         {
             return Task.FromResult<object>("Ok");
         }

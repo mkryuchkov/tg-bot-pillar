@@ -10,8 +10,8 @@ namespace TgBotPillar.StateProcessor.Configuration
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            var configurationSection = configuration.GetSection(nameof(StateProcessorConfiguration));
-            services.Configure<StateProcessorConfiguration>(configurationSection);
+            services.Configure<StateProcessorConfiguration>(
+                configuration.GetSection(nameof(StateProcessorConfiguration)));
 
             services.AddSingleton<IStateProcessorService, StateProcessorService>();
 

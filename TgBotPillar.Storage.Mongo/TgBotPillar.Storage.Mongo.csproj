@@ -9,4 +9,8 @@
       <ProjectReference Include="..\TgBotPillar.Core\TgBotPillar.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MongoDB.Driver" Version="2.13.0" />
+    </ItemGroup>
+
 </Project>
