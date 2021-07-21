@@ -22,12 +22,12 @@ namespace TgBotPillar.Bot
 
             if (context.State != DefaultState.Start || state.Input != null)
             {
-                await _inputHandlersManager.HandleAsync(state.Input.Handler, context);
-                var (newName, newState) = await _stateProcessor.GetNewStateAsync(context.State, message.Text);
+                var newName = await _inputHandlersManager.HandleAsync(state.Input, context, message.Text);
+
                 if (newName != context.State)
                 {
                     await _storageService.UpdateStateAsync(message.Chat.Id, newName);
-                    state = newState;
+                    state = await _stateProcessor.GetStateAsync(newName);
                 }
             }
 

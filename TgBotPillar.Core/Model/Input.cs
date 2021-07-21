@@ -4,7 +4,7 @@ namespace TgBotPillar.Core.Model
 {
     public class Input
     {
-        public string Handler { get; init; }
+        public Handler Handler { get; init; }
         
         public IList<InputOption> Options { get; init; }
         

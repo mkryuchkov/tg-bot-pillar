@@ -5,6 +5,6 @@ namespace TgBotPillar.Core.Interfaces
 {
     public interface IInputHandlersManager
     {
-        Task HandleAsync(string name, IDialogContext context);
+        Task<string> HandleAsync(Input input, IDialogContext context, string text = null);
     }
 }

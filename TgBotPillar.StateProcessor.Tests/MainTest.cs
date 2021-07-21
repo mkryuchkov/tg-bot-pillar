@@ -36,7 +36,20 @@ namespace TgBotPillar.StateProcessor.Tests
                 if (stateValue.Input != null)
                 {
                     _testOutputHelper.WriteLine("  Input:");
-                    _testOutputHelper.WriteLine($"    Handler: {stateValue.Input.Handler}");
+                    _testOutputHelper.WriteLine($"    Handler:");
+                    if (stateValue.Input.Handler != null)
+                    {
+                        _testOutputHelper.WriteLine($"      Name: {stateValue.Input.Handler.Name}");
+
+                        // foreach (var (key, value) in stateValue.Input.Handler.Parameters)
+                        // {
+                        //     _testOutputHelper.WriteLine($"      Parameter: {key} -> {value}");
+                        // }
+                        foreach (var (key, value) in stateValue.Input.Handler.Switch)
+                        {
+                            _testOutputHelper.WriteLine($"      Switch: {key} -> {value}");
+                        }
+                    }
                     
                     _testOutputHelper.WriteLine("    Options:");
                     foreach (var option in stateValue.Input.Options)

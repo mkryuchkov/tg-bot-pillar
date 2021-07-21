@@ -28,7 +28,6 @@ question:
     - transition: menu
       label: Back
   input:
-    handler: text_input_handler # can provide transition
     options:
       - text: Programmer, Sir!
         transition: menu
