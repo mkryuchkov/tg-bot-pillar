@@ -30,13 +30,13 @@ namespace TgBotPillar.Bot
             _storageService = storageService;
         }
 
-        public async Task HandleAsync(Update update)
+        public async Task Handle(Update update)
         {
             var handler = update.Type switch
             {
-                UpdateType.Message => OnMessageReceivedAsync(update.Message),
-                UpdateType.CallbackQuery => OnCallbackQueryReceivedAsync(update.CallbackQuery),
-                _ => UnknownUpdateHandlerAsync(update)
+                UpdateType.Message => OnMessageReceived(update.Message),
+                UpdateType.CallbackQuery => OnCallbackQueryReceived(update.CallbackQuery),
+                _ => UnknownUpdateHandler(update)
             };
 
             try
@@ -45,7 +45,7 @@ namespace TgBotPillar.Bot
             }
             catch (Exception exception)
             {
-                await HandleErrorAsync(exception);
+                await HandleError(exception);
             }
         }
     }

@@ -10,24 +10,24 @@ namespace TgBotPillar.Bot
 {
     public partial class UpdateHandlerService
     {
-        private async Task OnMessageReceivedAsync(Message message)
+        private async Task OnMessageReceived(Message message)
         {
             _logger.LogInformation($"Receive message type: {message.Type}");
 
             if (message.Type != MessageType.Text)
                 return;
 
-            var context = await _storageService.GetContextAsync(message.Chat.Id);
-            var state = await _stateProcessor.GetStateAsync(context.State);
+            var context = await _storageService.GetContext(message.Chat.Id);
+            var state = await _stateProcessor.GetState(context.State);
 
             if (context.State != DefaultState.Start || state.Input != null)
             {
-                var newName = await _inputHandlersManager.HandleAsync(state.Input, context, message.Text);
+                var newName = await _inputHandlersManager.Handle(state.Input, context, message.Text);
 
                 if (newName != context.State)
                 {
-                    await _storageService.UpdateStateAsync(message.Chat.Id, newName);
-                    state = await _stateProcessor.GetStateAsync(newName);
+                    await _storageService.UpdateState(message.Chat.Id, newName);
+                    state = await _stateProcessor.GetState(newName);
                 }
             }
 

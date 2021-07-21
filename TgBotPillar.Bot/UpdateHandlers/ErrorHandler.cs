@@ -7,7 +7,7 @@ namespace TgBotPillar.Bot
 {
     public partial class UpdateHandlerService
     {
-        private Task HandleErrorAsync(Exception exception)
+        private Task HandleError(Exception exception)
         {
             var errorMessage = exception switch
             {

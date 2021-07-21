@@ -6,7 +6,7 @@ namespace TgBotPillar.Bot
 {
     public partial class UpdateHandlerService
     {
-        private Task UnknownUpdateHandlerAsync(Update update)
+        private Task UnknownUpdateHandler(Update update)
         {
             _logger.LogInformation($"Unknown update type: {update.Type}");
             return Task.CompletedTask;

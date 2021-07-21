@@ -26,7 +26,7 @@ namespace TgBotPillar.Storage.Mongo
                 nameof(DialogContext));
         }
 
-        public async Task<IDialogContext> GetContextAsync(long chatId)
+        public async Task<IDialogContext> GetContext(long chatId)
         {
             _logger.LogInformation($"Getting context for {chatId} chat");
             return await _contextCollection
@@ -35,7 +35,7 @@ namespace TgBotPillar.Storage.Mongo
                    ?? new DialogContext {State = DefaultState.Start};
         }
 
-        public async Task UpdateStateAsync(long chatId, string stateName)
+        public async Task UpdateState(long chatId, string stateName)
         {
             _logger.LogInformation($"Updating state for {chatId} to {stateName}");
             await _contextCollection.ReplaceOneAsync(_ => _.ChatId == chatId,

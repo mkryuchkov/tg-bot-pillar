@@ -23,14 +23,14 @@ namespace TgBotPillar.StateProcessor
         {
             _logger = logger;
             States = new Dictionary<string, State>();
-            Initialization = InitializeAsync(options.Value.FolderPath);
+            Initialization = Initialize(options.Value.FolderPath);
         }
 
         public Task Initialization { get; }
 
         public IReadOnlyDictionary<string, State> States { get; private set; }
 
-        private async Task InitializeAsync(string folderPath)
+        private async Task Initialize(string folderPath)
         {
             _logger.LogInformation("Initialization started");
             var allStates = new Dictionary<string, State>();
@@ -57,7 +57,7 @@ namespace TgBotPillar.StateProcessor
             _logger.LogInformation("Initialization completed");
         }
 
-        public async Task<State> GetStateAsync(string stateName)
+        public async Task<State> GetState(string stateName)
         {
             await Initialization;
             _logger.LogInformation($"Get {stateName} state");

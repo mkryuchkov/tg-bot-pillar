@@ -7,13 +7,13 @@ namespace TgBotPillar.Bot
 {
     public partial class UpdateHandlerService
     {
-        private async Task OnCallbackQueryReceivedAsync(CallbackQuery callbackQuery)
+        private async Task OnCallbackQueryReceived(CallbackQuery callbackQuery)
         {
             _logger.LogInformation($"Receive CallbackQuery {callbackQuery.Id}: {callbackQuery.Data}");
             
-            await _storageService.UpdateStateAsync(callbackQuery.Message.Chat.Id, callbackQuery.Data);
+            await _storageService.UpdateState(callbackQuery.Message.Chat.Id, callbackQuery.Data);
 
-            var state = await _stateProcessor.GetStateAsync(callbackQuery.Data);
+            var state = await _stateProcessor.GetState(callbackQuery.Data);
 
             if (state.Input != null)
             {

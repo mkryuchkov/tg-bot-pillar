@@ -22,10 +22,10 @@ namespace TgBotPillar.Bot.Input
             IOptions<BotInputHandlersConfiguration> options)
         {
             _logger = logger;
-            _initialization = InitializeAsync(options.Value);
+            _initialization = Initialize(options.Value);
         }
 
-        private async Task InitializeAsync(BotInputHandlersConfiguration config)
+        private async Task Initialize(BotInputHandlersConfiguration config)
         {
             _logger.LogInformation("Initialization started");
 
@@ -42,7 +42,7 @@ namespace TgBotPillar.Bot.Input
             await Task.CompletedTask;
         }
 
-        public async Task<string> HandleAsync(Core.Model.Input input, IDialogContext context, string text = null)
+        public async Task<string> Handle(Core.Model.Input input, IDialogContext context, string text = null)
         {
             await _initialization;
 
@@ -58,7 +58,7 @@ namespace TgBotPillar.Bot.Input
                 if (!_handlers.ContainsKey(input.Handler.Name))
                     throw new ArgumentException($"Handler `{input.Handler.Name}` not found.");
 
-                newState = await _handlers[input.Handler.Name].HandleAsync(context);
+                newState = await _handlers[input.Handler.Name].Handle(context);
                 newState = input.Handler.Switch.TryGetValue(newState, out var switchState)
                     ? switchState
                     : newState;

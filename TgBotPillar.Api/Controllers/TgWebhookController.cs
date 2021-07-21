@@ -17,7 +17,7 @@ namespace TgBotPillar.Api.Controllers
                 return BadRequest();
             }
 
-            await updateHandlerService.HandleAsync(update);
+            await updateHandlerService.Handle(update);
             return Ok();
         }
     }
