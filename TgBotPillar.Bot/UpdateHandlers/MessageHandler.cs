@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TgBotPillar.Bot.ModelExtensions;
+using TgBotPillar.Core.Interfaces;
 using TgBotPillar.Core.Model;
 
 namespace TgBotPillar.Bot
@@ -20,7 +22,7 @@ namespace TgBotPillar.Bot
             var context = await _storageService.GetContext(message.Chat.Id);
             var state = await _stateProcessor.GetState(context.State);
 
-            if (context.State != DefaultState.Start || state.Input != null)
+            if (context.State == DefaultState.Start || state.Input != null)
             {
                 var newName = await _inputHandlersManager.Handle(state.Input, context, message.Text);
 
@@ -30,10 +32,10 @@ namespace TgBotPillar.Bot
                     state = await _stateProcessor.GetState(newName);
                 }
             }
-
+            
             await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                state.Text,
+                await state.GetFormattedText(_inputHandlersManager, context, message.Text),
                 replyMarkup: state.GetKeyboard());
         }
     }

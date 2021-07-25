@@ -10,5 +10,13 @@ namespace TgBotPillar.Core.Interfaces
         Task UpdateState(long chatId, string stateName);
         
         Task SaveQuestion(long chatId, string questionType, string text);
+        
+        Task<IQuestion> GetQuestion(long chatId, string questionType);
+        
+        Task Stash<TValue>(long chatId, string key, TValue value);
+        
+        Task<TValue> UnStash<TValue>(long chatId, string key);
+        
+        Task SaveAnswer(long chatId, string questionType, string questionId, string text);
     }
 }

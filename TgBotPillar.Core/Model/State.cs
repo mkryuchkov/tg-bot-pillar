@@ -6,12 +6,15 @@ namespace TgBotPillar.Core.Model
     {
         public string Text { get; init; }
 
+        public IList<Handler> TextParameters { get; init; }
+        
         public IList<Button> Buttons { get; init; }
 
         public Input Input { get; init; }
         
         public State()
         {
+            TextParameters = new List<Handler>();
             Buttons = new List<Button>();
         }
     }

@@ -14,12 +14,13 @@ namespace TgBotPillar.Bot
             await _storageService.UpdateState(callbackQuery.Message.Chat.Id, callbackQuery.Data);
 
             var state = await _stateProcessor.GetState(callbackQuery.Data);
+            var context = await _storageService.GetContext(callbackQuery.Message.Chat.Id);
 
             if (state.Input != null)
             {
                 await _botClient.SendTextMessageAsync(
                     callbackQuery.Message.Chat.Id,
-                    state.Text,
+                    await state.GetFormattedText(_inputHandlersManager, context),
                     replyMarkup: state.Input.GetKeyboard());
             }
             else
@@ -27,7 +28,7 @@ namespace TgBotPillar.Bot
                 await _botClient.EditMessageTextAsync(
                     callbackQuery.Message.Chat.Id,
                     callbackQuery.Message.MessageId,
-                    state.Text,
+                    await state.GetFormattedText(_inputHandlersManager, context),
                     replyMarkup: state.Buttons.GetInlineKeyboard());
             }
         }

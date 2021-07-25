@@ -20,6 +20,7 @@ namespace TgBotPillar.Bot.Input.Handlers
                 context.ChatId,
                 parameters[HandlerParameter.QuestionType],
                 text);
+            
             return HandlerResponse.Ok;
         }
     }

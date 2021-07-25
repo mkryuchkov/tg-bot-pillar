@@ -58,20 +58,25 @@ namespace TgBotPillar.Bot.Input
 
             if (input.Handler != null)
             {
-                if (!_handlers.ContainsKey(input.Handler.Name))
-                    throw new ArgumentException($"Handler `{input.Handler.Name}` not found.");
-
-                var handlerResult = (await _handlers[input.Handler.Name]
-                        .Handle(_storageService, input.Handler.Parameters, context, text))
-                    .ToLowerInvariant();
-                newState = input.Handler.Switch.TryGetValue(handlerResult, out var switchState)
-                    ? switchState
-                    : newState;
+                newState = await Handle(input.Handler, context, text) ?? newState;
             }
 
             return string.IsNullOrEmpty(newState)
                 ? input.DefaultTransition
-                : newState;
+                : newState.ToLowerInvariant();
+        }
+
+        public async Task<string> Handle(Handler handler, IDialogContext context, string text = null)
+        {
+            if (!_handlers.ContainsKey(handler.Name))
+                throw new ArgumentException($"Handler `{handler.Name}` not found.");
+
+            var handlerResult = await _handlers[handler.Name]
+                .Handle(_storageService, handler.Parameters, context, text);
+
+            return handler.Switch.TryGetValue(handlerResult, out var switchState)
+                ? switchState
+                : handlerResult;
         }
     }
 }
