@@ -44,8 +44,8 @@ namespace TgBotPillar.StateProcessor
             foreach (var fileInfo in dirInfo.GetFiles("*.yml"))
             {
                 var states = deserializer.Deserialize<Dictionary<string, State>>(
-                    await File.ReadAllTextAsync(fileInfo.FullName))
-                    ?? new Dictionary<string, State>();
+                                 await File.ReadAllTextAsync(fileInfo.FullName))
+                             ?? new Dictionary<string, State>();
 
                 foreach (var (key, value) in states)
                 {
@@ -61,7 +61,9 @@ namespace TgBotPillar.StateProcessor
         {
             await Initialization;
             _logger.LogInformation($"Get {stateName} state");
-            return States[stateName];
+            return States.TryGetValue(stateName, out var state)
+                ? state
+                : States[DefaultState.Start];
         }
 
         public async Task<Tuple<string, State>> GetNewStateAsync(string state, string inputText)

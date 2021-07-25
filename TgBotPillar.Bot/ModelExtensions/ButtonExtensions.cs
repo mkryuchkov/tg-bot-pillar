@@ -8,16 +8,13 @@ namespace TgBotPillar.Bot.ModelExtensions
     public static class ButtonExtensions
     {
         public static InlineKeyboardMarkup GetInlineKeyboard(
-            this IEnumerable<Button> buttons)
-        {
-            return new(new[]
+            this IEnumerable<Button> buttons) =>
+            new(
+                buttons.Select(button => new[]
                 {
-                    buttons.Select(button =>
-                        InlineKeyboardButton.WithCallbackData(
-                            button.Label, button.Transition)
-                    )
-                }
+                    InlineKeyboardButton.WithCallbackData(
+                        button.Label, button.Transition)
+                })
             );
-        }
     }
 }
