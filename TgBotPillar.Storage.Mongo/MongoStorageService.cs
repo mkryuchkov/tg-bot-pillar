@@ -40,9 +40,13 @@ namespace TgBotPillar.Storage.Mongo
         public async Task UpdateState(long chatId, string stateName)
         {
             _logger.LogInformation($"Updating state for {chatId} to {stateName}");
-            await _contextCollection.FindOneAndUpdateAsync(
+            await _contextCollection.UpdateOneAsync(
                 _ => _.ChatId == chatId,
-                Builders<DialogContext>.Update.Set(_ => _.State, stateName));
+                Builders<DialogContext>.Update.Set(_ => _.State, stateName),
+                new UpdateOptions
+                {
+                    IsUpsert = true
+                });
         }
 
         public Task SaveQuestion(long chatId, string questionType, string text)

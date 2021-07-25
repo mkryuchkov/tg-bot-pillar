@@ -74,7 +74,7 @@ namespace TgBotPillar.Bot.Input
             var handlerResult = await _handlers[handler.Name]
                 .Handle(_storageService, handler.Parameters, context, text);
 
-            return handler.Switch.TryGetValue(handlerResult, out var switchState)
+            return handler.Switch.TryGetValue(handlerResult.ToLowerInvariant(), out var switchState)
                 ? switchState
                 : handlerResult;
         }

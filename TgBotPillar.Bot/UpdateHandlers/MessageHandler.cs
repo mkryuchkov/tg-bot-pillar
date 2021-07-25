@@ -22,7 +22,7 @@ namespace TgBotPillar.Bot
             var context = await _storageService.GetContext(message.Chat.Id);
             var state = await _stateProcessor.GetState(context.State);
 
-            if (context.State == DefaultState.Start || state.Input != null)
+            if (state.Input != null)
             {
                 var newName = await _inputHandlersManager.Handle(state.Input, context, message.Text);
 
@@ -32,6 +32,9 @@ namespace TgBotPillar.Bot
                     state = await _stateProcessor.GetState(newName);
                 }
             }
+            
+            if (string.IsNullOrWhiteSpace(state.Text)) 
+                return;
             
             await _botClient.SendTextMessageAsync(
                 message.Chat.Id,

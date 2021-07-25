@@ -4,9 +4,10 @@ WORKDIR /app
 COPY *.sln ./
 COPY TgBotPillar.Common/*.csproj ./TgBotPillar.Common/
 COPY TgBotPillar.Core/*.csproj ./TgBotPillar.Core/
-COPY TgBotPillar.Storage/*.csproj ./TgBotPillar.Storage/
+COPY TgBotPillar.Storage.Mongo/*.csproj ./TgBotPillar.Storage.Mongo/
 COPY TgBotPillar.StateProcessor/*.csproj ./TgBotPillar.StateProcessor/
 COPY TgBotPillar.StateProcessor.Tests/*.csproj ./TgBotPillar.StateProcessor.Tests/
+COPY TgBotPillar.Bot.Input/*.csproj ./TgBotPillar.Bot.Input/
 COPY TgBotPillar.Bot/*.csproj ./TgBotPillar.Bot/
 COPY TgBotPillar.Api/*.csproj ./TgBotPillar.Api/
 
