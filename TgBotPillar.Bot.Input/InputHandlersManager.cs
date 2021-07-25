@@ -15,13 +15,16 @@ namespace TgBotPillar.Bot.Input
     {
         private readonly Task _initialization;
         private readonly ILogger<InputHandlersManager> _logger;
+        private readonly IStorageService _storageService;
         private IReadOnlyDictionary<string, IInputHandler> _handlers;
 
         public InputHandlersManager(
             ILogger<InputHandlersManager> logger,
-            IOptions<BotInputHandlersConfiguration> options)
+            IOptions<BotInputHandlersConfiguration> options,
+            IStorageService storageService)
         {
             _logger = logger;
+            _storageService = storageService;
             _initialization = Initialize(options.Value);
         }
 
@@ -52,14 +55,16 @@ namespace TgBotPillar.Bot.Input
             {
                 newState = input.Options.FirstOrDefault(option => option.Text == text)?.Transition;
             }
-            
+
             if (input.Handler != null)
             {
                 if (!_handlers.ContainsKey(input.Handler.Name))
                     throw new ArgumentException($"Handler `{input.Handler.Name}` not found.");
 
-                newState = await _handlers[input.Handler.Name].Handle(context);
-                newState = input.Handler.Switch.TryGetValue(newState, out var switchState)
+                var handlerResult = (await _handlers[input.Handler.Name]
+                        .Handle(_storageService, input.Handler.Parameters, context, text))
+                    .ToLowerInvariant();
+                newState = input.Handler.Switch.TryGetValue(handlerResult, out var switchState)
                     ? switchState
                     : newState;
             }

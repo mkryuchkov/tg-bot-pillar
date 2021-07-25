@@ -8,5 +8,7 @@ namespace TgBotPillar.Core.Interfaces
         Task<IDialogContext> GetContext(long chatId);
         
         Task UpdateState(long chatId, string stateName);
+        
+        Task SaveQuestion(long chatId, string questionType, string text);
     }
 }

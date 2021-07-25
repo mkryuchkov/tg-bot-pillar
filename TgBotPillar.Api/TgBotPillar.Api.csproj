@@ -14,7 +14,6 @@
     <ProjectReference Include="..\TgBotPillar.Core\TgBotPillar.Core.csproj" />
     <ProjectReference Include="..\TgBotPillar.StateProcessor\TgBotPillar.StateProcessor.csproj" />
     <ProjectReference Include="..\TgBotPillar.Bot\TgBotPillar.Bot.csproj" />
-    <ProjectReference Include="..\TgBotPillar.Storage.InMemory\TgBotPillar.Storage.InMemory.csproj" />
     <ProjectReference Include="..\TgBotPillar.Storage.Mongo\TgBotPillar.Storage.Mongo.csproj" />
   </ItemGroup>
   <ItemGroup>

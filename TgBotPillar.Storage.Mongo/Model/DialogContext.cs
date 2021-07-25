@@ -8,5 +8,7 @@ namespace TgBotPillar.Storage.Mongo.Model
         [BsonId] public long ChatId { get; set; }
 
         public string State { get; set; }
+
+        [BsonDefaultValue(false)] public bool IsWhitelisted { get; set; }
     }
 }
