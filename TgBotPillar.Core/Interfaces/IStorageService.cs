@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TgBotPillar.Core.Model;
 
@@ -8,6 +9,8 @@ namespace TgBotPillar.Core.Interfaces
         Task<IDialogContext> GetContext(long chatId, string userName);
         
         Task UpdateState(long chatId, string userName, string stateName);
+        
+        Task SetUserFlags(string userName, IList<string> flags);
         
         Task SaveQuestion(long chatId, string questionType, string text);
         

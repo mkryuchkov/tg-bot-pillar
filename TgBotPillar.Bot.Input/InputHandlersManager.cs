@@ -41,9 +41,11 @@ namespace TgBotPillar.Bot.Input
                 .Select(type => (IInputHandler) Activator.CreateInstance(type))
                 .ToDictionary(handler => handler?.Name, _ => _);
 
-            _logger.LogInformation("Initialization completed");
+            await Task.WhenAll(config.UserFlags
+                .Where(_ => _.Value.Count > 0)
+                .Select(_ => _storageService.SetUserFlags(_.Key, _.Value)));
 
-            await Task.CompletedTask;
+            _logger.LogInformation("Initialization completed");
         }
 
         public async Task<string> Handle(Core.Scheme.Input input, IDialogContext context, string text = null)
@@ -69,6 +71,8 @@ namespace TgBotPillar.Bot.Input
 
         public async Task<string> Handle(Handler handler, IDialogContext context, string text = null)
         {
+            await _initialization;
+
             if (!_handlers.ContainsKey(handler.Name))
                 throw new ArgumentException($"Handler `{handler.Name}` not found.");
 

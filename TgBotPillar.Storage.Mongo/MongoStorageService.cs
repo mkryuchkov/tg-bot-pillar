@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -25,8 +27,16 @@ namespace TgBotPillar.Storage.Mongo
 
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.DatabaseName);
-            _contextCollection = _db.GetCollection<DialogContext>(
-                nameof(DialogContext));
+            _contextCollection = _db.GetCollection<DialogContext>(nameof(DialogContext));
+            _contextCollection.Indexes.CreateMany(new[]
+            {
+                new CreateIndexModel<DialogContext>(
+                    Builders<DialogContext>.IndexKeys.Ascending(_ => _.ChatId),
+                    new CreateIndexOptions {Unique = true, Sparse = true}),
+                new CreateIndexModel<DialogContext>(
+                    Builders<DialogContext>.IndexKeys.Ascending(_ => _.UserName),
+                    new CreateIndexOptions {Unique = true, Sparse = true}),
+            });
         }
 
         public async Task<IDialogContext> GetContext(long chatId, string userName)
@@ -47,14 +57,20 @@ namespace TgBotPillar.Storage.Mongo
         {
             _logger.LogInformation($"Updating state for {chatId} to {stateName}");
             await _contextCollection.UpdateOneAsync(
-                _ => _.ChatId == chatId,
+                _ => _.ChatId == chatId || _.UserName == userName,
                 Builders<DialogContext>.Update
                     .Set(_ => _.State, stateName)
                     .Set(_ => _.UserName, userName),
-                new UpdateOptions
-                {
-                    IsUpsert = true
-                });
+                new UpdateOptions {IsUpsert = true});
+        }
+
+        public async Task SetUserFlags(string userName, IList<string> flags)
+        {
+            _logger.LogInformation($"Setting flags for {userName} user");
+            await _contextCollection.UpdateOneAsync(
+                _ => _.UserName == userName,
+                Builders<DialogContext>.Update.Set(_ => _.Flags, flags),
+                new UpdateOptions {IsUpsert = true});
         }
 
         public Task SaveQuestion(long chatId, string questionType, string text)
@@ -96,7 +112,7 @@ namespace TgBotPillar.Storage.Mongo
         public async Task<TValue> UnStash<TValue>(long chatId, string key)
         {
             _logger.LogInformation($"Getting {chatId}.Stash[{key}]");
-            return (TValue)(await _db
+            return (TValue) (await _db
                     .GetCollection<Stash>(nameof(Stash))
                     .Find(_ => _.Key == $"{chatId}:{key}")
                     .FirstOrDefaultAsync())
