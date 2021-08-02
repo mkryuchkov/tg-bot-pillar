@@ -9,11 +9,13 @@ namespace TgBotPillar.Bot.ModelExtensions
 {
     public static class StateExtensions
     {
-        public static IReplyMarkup GetKeyboard(this State state)
+        public static IReplyMarkup GetKeyboard(this State state,
+            IInputHandlersManager handlersManager,
+            IDialogContext context)
         {
             return state.Input != null
-                ? state.Input.GetKeyboard()
-                : state.Buttons.GetInlineKeyboard();
+                ? state.Input.GetKeyboard(handlersManager, context)
+                : state.Buttons.GetInlineKeyboard(handlersManager, context);
         }
 
         public static async Task<string> GetFormattedText(this State state,

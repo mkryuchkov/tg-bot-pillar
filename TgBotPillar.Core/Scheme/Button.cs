@@ -2,7 +2,7 @@ using TgBotPillar.Common;
 
 namespace TgBotPillar.Core.Scheme
 {
-    public class Button
+    public class Button : IHasVisibilityHandler
     {
         private readonly string _label;
 
@@ -13,5 +13,7 @@ namespace TgBotPillar.Core.Scheme
         }
 
         public string Transition { get; init; }
+        
+        public Handler Visibility { get; init; }
     }
 }

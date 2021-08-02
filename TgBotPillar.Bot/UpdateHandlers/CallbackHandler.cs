@@ -24,7 +24,7 @@ namespace TgBotPillar.Bot
                 await _botClient.SendTextMessageAsync(
                     callbackQuery.Message.Chat.Id,
                     await state.GetFormattedText(_inputHandlersManager, context),
-                    replyMarkup: state.Input.GetKeyboard());
+                    replyMarkup: state.Input.GetKeyboard(_inputHandlersManager, context));
             }
             else
             {
@@ -32,7 +32,7 @@ namespace TgBotPillar.Bot
                     callbackQuery.Message.Chat.Id,
                     callbackQuery.Message.MessageId,
                     await state.GetFormattedText(_inputHandlersManager, context),
-                    replyMarkup: state.Buttons.GetInlineKeyboard());
+                    replyMarkup: state.Buttons.GetInlineKeyboard(_inputHandlersManager, context));
             }
         }
     }

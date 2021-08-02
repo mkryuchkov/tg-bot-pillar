@@ -1,12 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 using TgBotPillar.Bot.ModelExtensions;
-using TgBotPillar.Core.Interfaces;
-using TgBotPillar.Core.Model;
 
 namespace TgBotPillar.Bot
 {
@@ -15,9 +10,6 @@ namespace TgBotPillar.Bot
         private async Task OnMessageReceived(Message message)
         {
             _logger.LogInformation($"Receive message type: {message.Type}");
-
-            if (message.Type != MessageType.Text)
-                return;
 
             var context = await _storageService.GetContext(
                 message.Chat.Id, message.From.Username);
@@ -40,7 +32,7 @@ namespace TgBotPillar.Bot
             await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
                 await state.GetFormattedText(_inputHandlersManager, context, message.Text),
-                replyMarkup: state.GetKeyboard());
+                replyMarkup: state.GetKeyboard(_inputHandlersManager, context));
         }
     }
 }

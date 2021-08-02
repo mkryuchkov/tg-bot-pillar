@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TgBotPillar.Core.Interfaces;
+using TgBotPillar.Core.Scheme;
 
 namespace TgBotPillar.Bot
 {
@@ -34,9 +36,18 @@ namespace TgBotPillar.Bot
         {
             var handler = update.Type switch
             {
-                UpdateType.Message => OnMessageReceived(update.Message),
-                UpdateType.CallbackQuery => OnCallbackQueryReceived(update.CallbackQuery),
-                _ => UnknownUpdateHandler(update)
+                UpdateType.Message when
+                    update.Message.Type == MessageType.Text &&
+                    DefaultState.Commands.Contains(update.Message.Text) =>
+                    OnDefaultCommandReceived(update.Message),
+                UpdateType.Message when
+                    update.Message.Type == MessageType.Text &&
+                    !DefaultState.Commands.Contains(update.Message.Text) =>
+                    OnMessageReceived(update.Message),
+                UpdateType.CallbackQuery =>
+                    OnCallbackQueryReceived(update.CallbackQuery),
+                _ =>
+                    UnknownUpdateHandler(update)
             };
 
             try

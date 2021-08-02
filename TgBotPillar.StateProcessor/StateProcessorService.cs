@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TgBotPillar.Core.Interfaces;
-using TgBotPillar.Core.Model;
 using TgBotPillar.Core.Scheme;
 using TgBotPillar.StateProcessor.Configuration;
 using YamlDotNet.Serialization;
