@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using TgBotPillar.Bot.Input.Configuration;
 using TgBotPillar.Core.Interfaces;
 using TgBotPillar.Core.Model;
+using TgBotPillar.Core.Scheme;
 
 namespace TgBotPillar.Bot.Input
 {
@@ -45,7 +46,7 @@ namespace TgBotPillar.Bot.Input
             await Task.CompletedTask;
         }
 
-        public async Task<string> Handle(Core.Model.Input input, IDialogContext context, string text = null)
+        public async Task<string> Handle(Core.Scheme.Input input, IDialogContext context, string text = null)
         {
             await _initialization;
 

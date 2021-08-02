@@ -1,4 +1,4 @@
-﻿namespace TgBotPillar.Core.Model
+﻿namespace TgBotPillar.Core.Scheme
 {
     public static class DefaultState
     {

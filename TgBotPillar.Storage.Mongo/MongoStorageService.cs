@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using TgBotPillar.Core.Interfaces;
 using TgBotPillar.Core.Model;
+using TgBotPillar.Core.Scheme;
 using TgBotPillar.Storage.Mongo.Configuration;
 using TgBotPillar.Storage.Mongo.Model;
 

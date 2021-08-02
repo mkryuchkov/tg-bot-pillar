@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types.ReplyMarkups;
 using TgBotPillar.Core.Interfaces;
 using TgBotPillar.Core.Model;
+using TgBotPillar.Core.Scheme;
 
 namespace TgBotPillar.Bot.ModelExtensions
 {

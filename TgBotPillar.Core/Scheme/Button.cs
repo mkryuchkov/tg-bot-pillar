@@ -1,6 +1,6 @@
 using TgBotPillar.Common;
 
-namespace TgBotPillar.Core.Model
+namespace TgBotPillar.Core.Scheme
 {
     public class Button
     {

@@ -2,6 +2,7 @@
 using System.Linq;
 using Telegram.Bot.Types.ReplyMarkups;
 using TgBotPillar.Core.Model;
+using TgBotPillar.Core.Scheme;
 
 namespace TgBotPillar.Bot.ModelExtensions
 {

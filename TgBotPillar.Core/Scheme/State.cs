@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace TgBotPillar.Core.Model
+namespace TgBotPillar.Core.Scheme
 {
     public class State
     {
