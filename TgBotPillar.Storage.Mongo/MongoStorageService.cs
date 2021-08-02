@@ -63,12 +63,21 @@ namespace TgBotPillar.Storage.Mongo
                 new UpdateOptions {IsUpsert = true});
         }
 
-        public async Task SetUserFlags(string userName, IList<string> flags)
+        public async Task UpdateUserFlags(string userName, IList<string> flags)
         {
-            _logger.LogInformation($"Setting flags for {userName} user");
+            _logger.LogInformation($"Updating flags for {userName} user");
             await _contextCollection.UpdateOneAsync(
                 _ => _.UserName == userName,
                 Builders<DialogContext>.Update.Set(_ => _.Flags, flags),
+                new UpdateOptions {IsUpsert = true});
+        }
+
+        public async Task SetUserFlag(string userName, string flag)
+        {
+            _logger.LogInformation($"Setting {flag} flag for {userName} user");
+            await _contextCollection.UpdateOneAsync(
+                _ => _.UserName == userName,
+                Builders<DialogContext>.Update.AddToSet(_ => _.Flags, flag),
                 new UpdateOptions {IsUpsert = true});
         }
 

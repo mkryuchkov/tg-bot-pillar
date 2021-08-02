@@ -43,7 +43,7 @@ namespace TgBotPillar.Bot.Input
 
             await Task.WhenAll(config.UserFlags
                 .Where(_ => _.Value.Count > 0)
-                .Select(_ => _storageService.SetUserFlags(_.Key, _.Value)));
+                .Select(_ => _storageService.UpdateUserFlags(_.Key, _.Value)));
 
             _logger.LogInformation("Initialization completed");
         }

@@ -10,7 +10,9 @@ namespace TgBotPillar.Core.Interfaces
         
         Task UpdateState(long chatId, string userName, string stateName);
         
-        Task SetUserFlags(string userName, IList<string> flags);
+        Task UpdateUserFlags(string userName, IList<string> flags);
+
+        Task SetUserFlag(string userName, string flag);
         
         Task SaveQuestion(long chatId, string questionType, string text);
         
