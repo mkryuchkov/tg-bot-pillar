@@ -10,11 +10,14 @@ namespace TgBotPillar.Bot
         private async Task OnCallbackQueryReceived(CallbackQuery callbackQuery)
         {
             _logger.LogInformation($"Receive CallbackQuery {callbackQuery.Id}: {callbackQuery.Data}");
-            
-            await _storageService.UpdateState(callbackQuery.Message.Chat.Id, callbackQuery.Data);
+
+            await _storageService.UpdateState(
+                callbackQuery.Message.Chat.Id, callbackQuery.From.Username, 
+                callbackQuery.Data);
 
             var state = await _stateProcessor.GetState(callbackQuery.Data);
-            var context = await _storageService.GetContext(callbackQuery.Message.Chat.Id);
+            var context = await _storageService.GetContext(
+                callbackQuery.Message.Chat.Id, callbackQuery.From.Username);
 
             if (state.Input != null)
             {

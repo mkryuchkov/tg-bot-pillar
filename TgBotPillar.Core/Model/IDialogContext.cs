@@ -1,11 +1,15 @@
-﻿namespace TgBotPillar.Core.Model
+﻿using System.Collections.Generic;
+
+namespace TgBotPillar.Core.Model
 {
     public interface IDialogContext
     {
         public long ChatId { get; }
         
-        string State { get; }
+        public string UserName { get; }
         
-        bool IsWhitelisted { get; }
+        string State { get; }
+
+        IList<string> Flags { get; }
     }
 }

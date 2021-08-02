@@ -29,21 +29,28 @@ namespace TgBotPillar.Storage.Mongo
                 nameof(DialogContext));
         }
 
-        public async Task<IDialogContext> GetContext(long chatId)
+        public async Task<IDialogContext> GetContext(long chatId, string userName)
         {
             _logger.LogInformation($"Getting context for {chatId} chat");
             return await _contextCollection
-                       .Find(_ => _.ChatId == chatId)
+                       .Find(_ => _.ChatId == chatId || _.UserName == userName)
                        .FirstOrDefaultAsync()
-                   ?? new DialogContext {ChatId = chatId, State = DefaultState.Start};
+                   ?? new DialogContext
+                   {
+                       ChatId = chatId,
+                       UserName = userName,
+                       State = DefaultState.Start
+                   };
         }
 
-        public async Task UpdateState(long chatId, string stateName)
+        public async Task UpdateState(long chatId, string userName, string stateName)
         {
             _logger.LogInformation($"Updating state for {chatId} to {stateName}");
             await _contextCollection.UpdateOneAsync(
                 _ => _.ChatId == chatId,
-                Builders<DialogContext>.Update.Set(_ => _.State, stateName),
+                Builders<DialogContext>.Update
+                    .Set(_ => _.State, stateName)
+                    .Set(_ => _.UserName, userName),
                 new UpdateOptions
                 {
                     IsUpsert = true

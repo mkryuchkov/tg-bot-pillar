@@ -19,7 +19,8 @@ namespace TgBotPillar.Bot
             if (message.Type != MessageType.Text)
                 return;
 
-            var context = await _storageService.GetContext(message.Chat.Id);
+            var context = await _storageService.GetContext(
+                message.Chat.Id, message.From.Username);
             var state = await _stateProcessor.GetState(context.State);
 
             if (state.Input != null)
@@ -28,14 +29,14 @@ namespace TgBotPillar.Bot
 
                 if (newName != context.State)
                 {
-                    await _storageService.UpdateState(message.Chat.Id, newName);
+                    await _storageService.UpdateState(message.Chat.Id, message.From.Username, newName);
                     state = await _stateProcessor.GetState(newName);
                 }
             }
-            
-            if (string.IsNullOrWhiteSpace(state.Text)) 
+
+            if (string.IsNullOrWhiteSpace(state.Text))
                 return;
-            
+
             await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
                 await state.GetFormattedText(_inputHandlersManager, context, message.Text),
