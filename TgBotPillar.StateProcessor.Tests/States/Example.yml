@@ -33,4 +33,4 @@ question:
         transition: menu
       - text: Manager, Sir!
         transition: menu
-#    default_transition: menu
+    default_transition: menu

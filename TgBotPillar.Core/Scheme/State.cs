@@ -12,6 +12,8 @@ namespace TgBotPillar.Core.Scheme
 
         public Input Input { get; init; }
         
+        public string Transition { get; init; }
+        
         public State()
         {
             TextParameters = new List<Handler>();

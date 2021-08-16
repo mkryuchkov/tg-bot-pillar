@@ -33,12 +33,12 @@ namespace TgBotPillar.Bot.Input
         {
             _logger.LogInformation("Initialization started");
 
-            _handlers = new[] {typeof(InputHandlersManager).Assembly.Location}
+            _handlers = new[] { typeof(InputHandlersManager).Assembly.Location }
                 .Concat(config.Assemblies)
                 .SelectMany(assemblyName => Assembly.LoadFrom(assemblyName).GetTypes())
                 .Where(type => typeof(IInputHandler).IsAssignableFrom(type)
                                && !type.IsInterface && !type.IsAbstract)
-                .Select(type => (IInputHandler) Activator.CreateInstance(type))
+                .Select(type => (IInputHandler)Activator.CreateInstance(type))
                 .ToDictionary(handler => handler?.Name, _ => _);
 
             await Task.WhenAll(config.UserFlags
@@ -54,14 +54,14 @@ namespace TgBotPillar.Bot.Input
 
             string newState = null;
 
+            if (input.Handler != null)
+            {
+                newState = await Handle(input.Handler, context, text);
+            }
+
             if (input.Options.Count > 0 && !string.IsNullOrEmpty(text))
             {
                 newState = input.Options.FirstOrDefault(option => option.Text == text)?.Transition;
-            }
-
-            if (input.Handler != null)
-            {
-                newState = await Handle(input.Handler, context, text) ?? newState;
             }
 
             return string.IsNullOrEmpty(newState)

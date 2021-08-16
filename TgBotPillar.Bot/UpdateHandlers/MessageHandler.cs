@@ -10,7 +10,11 @@ namespace TgBotPillar.Bot
         private async Task OnMessageReceived(Message message)
         {
             _logger.LogInformation($"Receive message type: {message.Type}");
+            await ProcessMessage(message);
+        }
 
+        private async Task ProcessMessage(Message message)
+        {
             var context = await _storageService.GetContext(
                 message.Chat.Id, message.From.Username);
             var state = await _stateProcessor.GetState(context.State);
@@ -33,6 +37,12 @@ namespace TgBotPillar.Bot
                 message.Chat.Id,
                 await state.GetFormattedText(_inputHandlersManager, context, message.Text),
                 replyMarkup: state.GetKeyboard(_inputHandlersManager, context));
+
+            if (!string.IsNullOrWhiteSpace(state.Transition))
+            {
+                await _storageService.UpdateState(message.Chat.Id, message.From.Username, state.Transition);
+                await ProcessMessage(message);
+            }
         }
     }
 }
