@@ -17,7 +17,7 @@ namespace TgBotPillar.Bot.Input.Handlers
         {
             var userName = text[1..].Split().FirstOrDefault();
             
-            if (string.IsNullOrEmpty(userName))
+            if (string.IsNullOrEmpty(userName) || text[0] != '@')
                 return false.ToString();
             
             await storageService.SetUserFlag(userName, parameters[HandlerParameter.FlagName]);
