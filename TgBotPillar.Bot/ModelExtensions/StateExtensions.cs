@@ -15,7 +15,9 @@ namespace TgBotPillar.Bot.ModelExtensions
         {
             return state.Input != null
                 ? state.Input.GetKeyboard(handlersManager, context)
-                : state.Buttons.GetInlineKeyboard(handlersManager, context);
+                : state.Buttons.Count > 0
+                    ? state.Buttons.GetInlineKeyboard(handlersManager, context)
+                    : new ReplyKeyboardRemove();
         }
 
         public static async Task<string> GetFormattedText(this State state,
