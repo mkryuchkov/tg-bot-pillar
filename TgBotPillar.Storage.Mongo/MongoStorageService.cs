@@ -31,25 +31,44 @@ namespace TgBotPillar.Storage.Mongo
             {
                 new CreateIndexModel<DialogContext>(
                     Builders<DialogContext>.IndexKeys.Ascending(_ => _.ChatId),
-                    new CreateIndexOptions {Unique = true, Sparse = true}),
+                    new CreateIndexOptions { Unique = true, Sparse = true }),
                 new CreateIndexModel<DialogContext>(
                     Builders<DialogContext>.IndexKeys.Ascending(_ => _.UserName),
-                    new CreateIndexOptions {Unique = true, Sparse = true}),
+                    new CreateIndexOptions { Unique = true, Sparse = true }),
             });
         }
 
         public async Task<IDialogContext> GetContext(long chatId, string userName)
         {
             _logger.LogInformation($"Getting context for {chatId} chat");
-            return await _contextCollection
-                       .Find(_ => _.ChatId == chatId || _.UserName == userName)
-                       .FirstOrDefaultAsync()
-                   ?? new DialogContext
-                   {
-                       ChatId = chatId,
-                       UserName = userName,
-                       State = DefaultState.Start
-                   };
+
+            var context = await _contextCollection
+                .Find(_ => _.ChatId == chatId || _.UserName == userName)
+                .FirstOrDefaultAsync();
+
+            if (context == null)
+                return new DialogContext
+                {
+                    ChatId = chatId,
+                    UserName = userName,
+                    State = DefaultState.Start
+                };
+
+            if (context.ChatId == default)
+            {
+                context.ChatId = chatId;
+                await _contextCollection.UpdateOneAsync(_ => _.Id == context.Id,
+                    Builders<DialogContext>.Update.Set(_ => _.ChatId, chatId));
+            }
+
+            if (string.IsNullOrWhiteSpace(context.UserName))
+            {
+                context.UserName = userName;
+                await _contextCollection.UpdateOneAsync(_ => _.Id == context.Id,
+                    Builders<DialogContext>.Update.Set(_ => _.UserName, userName));
+            }
+
+            return context;
         }
 
         public async Task UpdateState(long chatId, string userName, string stateName)
@@ -57,10 +76,8 @@ namespace TgBotPillar.Storage.Mongo
             _logger.LogInformation($"Updating state for {chatId} to {stateName}");
             await _contextCollection.UpdateOneAsync(
                 _ => _.ChatId == chatId || _.UserName == userName,
-                Builders<DialogContext>.Update
-                    .Set(_ => _.State, stateName)
-                    .Set(_ => _.UserName, userName),
-                new UpdateOptions {IsUpsert = true});
+                Builders<DialogContext>.Update.Set(_ => _.State, stateName),
+                new UpdateOptions { IsUpsert = true });
         }
 
         public async Task UpdateUserFlags(string userName, IList<string> flags)
@@ -69,7 +86,7 @@ namespace TgBotPillar.Storage.Mongo
             await _contextCollection.UpdateOneAsync(
                 _ => _.UserName == userName,
                 Builders<DialogContext>.Update.Set(_ => _.Flags, flags),
-                new UpdateOptions {IsUpsert = true});
+                new UpdateOptions { IsUpsert = true });
         }
 
         public async Task SetUserFlag(string userName, string flag)
@@ -78,19 +95,23 @@ namespace TgBotPillar.Storage.Mongo
             await _contextCollection.UpdateOneAsync(
                 _ => _.UserName == userName,
                 Builders<DialogContext>.Update.AddToSet(_ => _.Flags, flag),
-                new UpdateOptions {IsUpsert = true});
+                new UpdateOptions { IsUpsert = true });
         }
 
-        public Task SaveQuestion(long chatId, string questionType, string text)
+        public async Task<string> SaveQuestion(long chatId, string questionType, string text)
         {
             _logger.LogInformation($"Saving {questionType} question text:\n{text}\nfor {chatId}");
-            return _db
+
+            var question = new TextQuestion
+            {
+                ChatId = chatId,
+                Text = text
+            };
+            await _db
                 .GetCollection<TextQuestion>(questionType)
-                .InsertOneAsync(new TextQuestion
-                {
-                    ChatId = chatId,
-                    Text = text
-                });
+                .InsertOneAsync(question);
+
+            return question.Id;
         }
 
         public async Task<IQuestion> GetQuestion(long chatId, string questionType)
@@ -120,7 +141,7 @@ namespace TgBotPillar.Storage.Mongo
         public async Task<TValue> UnStash<TValue>(long chatId, string key)
         {
             _logger.LogInformation($"Getting {chatId}.Stash[{key}]");
-            return (TValue) (await _db
+            return (TValue)(await _db
                     .GetCollection<Stash>(nameof(Stash))
                     .Find(_ => _.Key == $"{chatId}:{key}")
                     .FirstOrDefaultAsync())

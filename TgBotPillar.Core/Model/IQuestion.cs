@@ -7,7 +7,9 @@ namespace TgBotPillar.Core.Model
         public string Id { get; }
         
         public long ChatId { get; }
+        
         public string Text { get; }
+        
         IList<ITextAnswer> Answers { get; }
     }
 }

@@ -14,7 +14,7 @@ namespace TgBotPillar.Core.Interfaces
 
         Task SetUserFlag(string userName, string flag);
         
-        Task SaveQuestion(long chatId, string questionType, string text);
+        Task<string> SaveQuestion(long chatId, string questionType, string text);
         
         Task<IQuestion> GetQuestion(long chatId, string questionType);
         

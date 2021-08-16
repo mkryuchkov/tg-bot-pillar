@@ -6,28 +6,24 @@ using TgBotPillar.Core.Model;
 
 namespace TgBotPillar.Bot.Input.Handlers
 {
-    public class SaveQuestionHandler : IInputHandler
+    public class SaveQuestionAnswerTransitHandler : IInputHandler
     {
-        public string Name => "save_question";
+        public string Name => "save_question_answer_transit";
 
         public async Task<string> Handle(IStorageService storageService,
             IDictionary<string, string> parameters, IDialogContext context,
             string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
-                return HandlerResponse.Error;
+            var questionId = await storageService
+                .UnStash<string>(context.ChatId, HandlerStashKey.QuestionId);
 
-            var questionId = await storageService.SaveQuestion(
+            await storageService.SaveAnswer(
                 context.ChatId,
                 parameters[HandlerParameter.QuestionType],
+                questionId,
                 text);
 
-            await storageService.Stash(
-                context.ChatId,
-                HandlerStashKey.QuestionId,
-                questionId);
-
-            return HandlerResponse.Ok;
+            return text;
         }
     }
 }
