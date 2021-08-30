@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using TgBotPillar.Core.Interfaces;
@@ -24,6 +27,7 @@ namespace TgBotPillar.Storage.Mongo
         {
             _logger = logger;
 
+            BsonClassMap.RegisterClassMap<TextAnswer>();
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.DatabaseName);
             _contextCollection = _db.GetCollection<DialogContext>(nameof(DialogContext));
@@ -114,7 +118,7 @@ namespace TgBotPillar.Storage.Mongo
             return question.Id;
         }
 
-        public async Task<IQuestion> GetQuestion(long chatId, string questionType)
+        public async Task<IQuestion> GetRandomQuestion(long chatId, string questionType)
         {
             _logger.LogInformation($"Getting {questionType} question for {chatId}");
             return await _db
@@ -124,6 +128,33 @@ namespace TgBotPillar.Storage.Mongo
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<IQuestion> GetQuestion(long chatId, string questionType, string questionId)
+        {
+            _logger.LogInformation($"Getting {questionType}:{questionId} question for {chatId}");
+            return await _db
+                .GetCollection<TextQuestion>(questionType)
+                .Find(_ => _.Id == questionId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Tuple<IEnumerable<IQuestion>, long>> GetQuestions(long chatId, string questionType,
+            int pageSize, int pageNumber)
+        {
+            _logger.LogInformation(
+                $"Getting {questionType} questions for {chatId}: from {pageSize * pageNumber} to {pageSize * (pageNumber + 1)}");
+            return new Tuple<IEnumerable<IQuestion>, long>(
+                await _db
+                    .GetCollection<TextQuestion>(questionType)
+                    .AsQueryable()
+                    .OrderBy(_ => _.Id) // todo: make sort by insertion date
+                    .Skip(pageSize * pageNumber)
+                    .Take(pageSize)
+                    .ToListAsync(),
+                await _db
+                    .GetCollection<TextQuestion>(questionType)
+                    .CountDocumentsAsync(_ => true));
+        }
+
         public Task Stash<TValue>(long chatId, string key, TValue value)
         {
             _logger.LogInformation($"Saving {chatId}.Stash[{key}]={value}");
@@ -131,7 +162,9 @@ namespace TgBotPillar.Storage.Mongo
                 .GetCollection<Stash>(nameof(Stash))
                 .UpdateOneAsync(
                     _ => _.Key == $"{chatId}:{key}",
-                    Builders<Stash>.Update.Set(_ => _.Value, value),
+                    Builders<Stash>.Update.Set(
+                        _ => _.Value,
+                        JsonSerializer.Serialize(value)),
                     new UpdateOptions
                     {
                         IsUpsert = true
@@ -141,11 +174,15 @@ namespace TgBotPillar.Storage.Mongo
         public async Task<TValue> UnStash<TValue>(long chatId, string key)
         {
             _logger.LogInformation($"Getting {chatId}.Stash[{key}]");
-            return (TValue)(await _db
-                    .GetCollection<Stash>(nameof(Stash))
-                    .Find(_ => _.Key == $"{chatId}:{key}")
-                    .FirstOrDefaultAsync())
-                .Value;
+
+            var stashEntry = await _db
+                .GetCollection<Stash>(nameof(Stash))
+                .Find(_ => _.Key == $"{chatId}:{key}")
+                .FirstOrDefaultAsync();
+
+            return stashEntry != null
+                ? JsonSerializer.Deserialize<TValue>(stashEntry.Value)
+                : default;
         }
 
         public Task SaveAnswer(long chatId, string questionType, string questionId, string text)

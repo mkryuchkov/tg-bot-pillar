@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using TgBotPillar.Bot.ModelExtensions;
 
 namespace TgBotPillar.Bot
@@ -36,7 +37,8 @@ namespace TgBotPillar.Bot
             await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
                 await state.GetFormattedText(_inputHandlersManager, context, message.Text),
-                replyMarkup: state.GetKeyboard(_inputHandlersManager, context));
+                ParseMode.MarkdownV2,
+                replyMarkup: await state.GetKeyboard(_inputHandlersManager, context, _storageService));
 
             if (!string.IsNullOrWhiteSpace(state.Transition))
             {

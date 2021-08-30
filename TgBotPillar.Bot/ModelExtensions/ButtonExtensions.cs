@@ -11,14 +11,17 @@ namespace TgBotPillar.Bot.ModelExtensions
     {
         public static InlineKeyboardMarkup GetInlineKeyboard(this IEnumerable<Button> buttons,
             IInputHandlersManager handlersManager, IDialogContext context) =>
-            new(
-                buttons
-                    .FilterVisible(handlersManager, context)
-                    .Select(button => new[]
-                    {
-                        InlineKeyboardButton.WithCallbackData(
-                            button.Label, button.Transition)
-                    })
-            );
+            new(buttons.GetInlineKeyboardButtons(handlersManager, context));
+
+        public static IEnumerable<IEnumerable<InlineKeyboardButton>> GetInlineKeyboardButtons(
+            this IEnumerable<Button> buttons,
+            IInputHandlersManager handlersManager, IDialogContext context) =>
+            buttons
+                .FilterVisible(handlersManager, context)
+                .Select(button => new[]
+                {
+                    InlineKeyboardButton.WithCallbackData(
+                        button.Label, button.Transition)
+                });
     }
 }

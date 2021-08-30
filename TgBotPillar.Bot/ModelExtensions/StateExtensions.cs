@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot.Types.ReplyMarkups;
 using TgBotPillar.Core.Interfaces;
@@ -9,15 +10,36 @@ namespace TgBotPillar.Bot.ModelExtensions
 {
     public static class StateExtensions
     {
-        public static IReplyMarkup GetKeyboard(this State state,
+        public static async Task<IReplyMarkup> GetKeyboard(this State state,
             IInputHandlersManager handlersManager,
-            IDialogContext context)
+            IDialogContext context,
+            IStorageService storage)
         {
             return state.Input != null
                 ? state.Input.GetKeyboard(handlersManager, context)
-                : state.Buttons.Count > 0
-                    ? state.Buttons.GetInlineKeyboard(handlersManager, context)
+                : state.HasInlineMarkup()
+                    ? await state.GetInlineKeyboard(handlersManager, context, storage)
                     : new ReplyKeyboardRemove();
+        }
+
+        public static async Task<InlineKeyboardMarkup> GetInlineKeyboard(this State state,
+            IInputHandlersManager handlersManager,
+            IDialogContext context,
+            IStorageService storage)
+        {
+            return new InlineKeyboardMarkup(
+                (state.Pager != null
+                    ? await state.Pager.GetMarkup(context, storage)
+                    : Enumerable.Empty<IEnumerable<InlineKeyboardButton>>())
+                .Concat(state.Buttons.Count > 0
+                    ? state.Buttons.GetInlineKeyboardButtons(handlersManager, context)
+                    : Enumerable.Empty<IEnumerable<InlineKeyboardButton>>()
+                ));
+        }
+
+        public static bool HasInlineMarkup(this State state)
+        {
+            return state.Buttons.Count > 0 || state.Pager != null;
         }
 
         public static async Task<string> GetFormattedText(this State state,
@@ -30,10 +52,9 @@ namespace TgBotPillar.Bot.ModelExtensions
                 return string.Format(state.Text,
                     await Task.WhenAll(state.TextParameters.Select(
                         handler => handlersManager.Handle(handler, context, messageText)))
-                );
+                ).EscapeMarkdownV2();
             }
-
-            return state.Text;
+            return state.Text.EscapeMarkdownV2();
         }
     }
 }

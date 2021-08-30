@@ -8,6 +8,8 @@ namespace TgBotPillar.Core.Scheme
 
         public IList<Handler> TextParameters { get; init; }
         
+        public Pager Pager { get; init; }
+        
         public IList<Button> Buttons { get; init; }
 
         public Input Input { get; init; }
